@@ -1,0 +1,2 @@
+# Rozpoznawanie_twarzy_i_sledzenie_ruchu
+Projekt z Podstaw Teleinformatyki
