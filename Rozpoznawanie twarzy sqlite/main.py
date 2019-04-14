@@ -153,6 +153,20 @@ def KamerkaIP():
            break
 
 
+def KamerkaIPwykrywanieTwarzy():
+    faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    url = 'http://10.5.5.54:8080/shot.jpg'  # trzeba bedzie zmienic
+    while (True):
+        imgResp = urllib.request.urlopen(url)
+        imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
+        img = cv2.imdecode(imgNp, -1)
+        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        faces = faceDetect.detectMultiScale(gray, 1.3, 2)
+        for(x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.imshow('test', img)
+        if (cv2.waitKey(1) == ord('q')):
+            break
 
 if __name__== "__main__":
     #wykrywanieTwarzy()
@@ -160,4 +174,5 @@ if __name__== "__main__":
     #getImagesWithID(path)
     #tworzeniePlikuTreningowego()
     #rozpoznawanieTwarz()
-    KamerkaIP()
+    #KamerkaIP()
+    KamerkaIPwykrywanieTwarzy()
