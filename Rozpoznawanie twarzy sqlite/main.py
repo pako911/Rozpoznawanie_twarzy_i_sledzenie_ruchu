@@ -4,6 +4,9 @@ import os
 from PIL import Image
 import sqlite3
 
+import urllib.request
+
+
 def wykrywanieTwarzy():
     faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     eyeDetect = cv2.CascadeClassifier('haarcascade_eye.xml')
@@ -139,10 +142,22 @@ def rozpoznawanieTwarz():
     cam.release()
     cv2.destroyAllWindows()
 
+def KamerkaIP():
+   url = 'http://10.5.5.54:8080/shot.jpg' # trzeba bedzie zmienic
+   while(True):
+       imgResp = urllib.request.urlopen(url)
+       imgNp = np.array(bytearray(imgResp.read()),dtype=np.uint8)
+       img=cv2.imdecode(imgNp,-1)
+       cv2.imshow('test',img)
+       if (cv2.waitKey(1) == ord('q')):
+           break
+
+
 
 if __name__== "__main__":
     #wykrywanieTwarzy()
     #tworzenieDataSet()
     #getImagesWithID(path)
     #tworzeniePlikuTreningowego()
-    rozpoznawanieTwarz()
+    #rozpoznawanieTwarz()
+    KamerkaIP()
