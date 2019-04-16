@@ -23,8 +23,8 @@ def wykrywanieTwarzy():
             cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
         for(x, y, w, h) in eyes:
             cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
-        for(x, y, w, h) in smile:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+       # for(x, y, w, h) in smile:
+       #     cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
         cv2.imshow("Face", img)
         if(cv2.waitKey(1)==ord('q')):
             break
@@ -170,7 +170,7 @@ def KamerkaIPwykrywanieTwarzy():
 
 def KamerkaIProzpoznawanieTwarzy():
     faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    url = 'http://10.5.5.54:8080/shot.jpg'  # trzeba bedzie zmienic
+    url = 'http://192.168.100.3:8080//shot.jpg'  # trzeba bedzie zmienic
     rec =cv2.face.LBPHFaceRecognizer_create()
     rec.read("recognizer\\trainingData.yml")
     id=0
@@ -193,6 +193,46 @@ def KamerkaIProzpoznawanieTwarzy():
         if (cv2.waitKey(1) == ord('q')):
             break
 
+def DwieKamerkaIProzpoznawanieTwarzy(): 
+    faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    url1 = 'http://192.168.100.3:8080//shot.jpg'  # trzeba bedzie zmienic
+    url2 = 'http://192.168.100.17:8080///shot.jpg'
+    rec =cv2.face.LBPHFaceRecognizer_create()
+    rec.read("recognizer\\trainingData.yml")
+    id=0
+    fontface=cv2.FONT_HERSHEY_SIMPLEX
+    while (True):
+        imgResp1 = urllib.request.urlopen(url1)
+        imgResp2 = urllib.request.urlopen(url2)
+        imgNp1 = np.array(bytearray(imgResp1.read()), dtype=np.uint8)
+        imgNp2 = np.array(bytearray(imgResp2.read()), dtype=np.uint8)
+        img1 = cv2.imdecode(imgNp1, -1)
+        gray1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
+        faces1 = faceDetect.detectMultiScale(gray1, 1.3, 2)
+        img2 = cv2.imdecode(imgNp2, -1)
+        gray2 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
+        faces2 = faceDetect.detectMultiScale(gray2, 1.3, 2)
+        for(x, y, w, h) in faces1:
+            cv2.rectangle(img1, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            id,conf = rec.predict(gray1[y:y+h,x:x+w])
+            profile = getProfile(id)
+            if(profile!=None):
+                cv2.putText(img1, str(profile[1]), (x, y + h + 30), fontface, 1, (255, 0, 0), 2) #zamista str(id) -> profile
+                cv2.putText(img1, str(profile[2]), (x, y + h + 60), fontface, 1, (255, 0, 0), 2)
+                cv2.putText(img1, str(profile[3]), (x, y + h + 90), fontface, 1, (255, 0, 0), 2)
+        for(x, y, w, h) in faces2:
+            cv2.rectangle(img2, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            id,conf = rec.predict(gray2[y:y+h,x:x+w])
+            profile = getProfile(id)
+            if(profile!=None):
+                cv2.putText(img2, str(profile[1]), (x, y + h + 30), fontface, 1, (255, 0, 0), 2) #zamista str(id) -> profile
+                cv2.putText(img2, str(profile[2]), (x, y + h + 60), fontface, 1, (255, 0, 0), 2)
+                cv2.putText(img2, str(profile[3]), (x, y + h + 90), fontface, 1, (255, 0, 0), 2)
+        cv2.imshow('test1', img1)
+        cv2.imshow('test2', img2)
+        if (cv2.waitKey(1) == ord('q')):
+            break
+
 if __name__== "__main__":
     #wykrywanieTwarzy()
     #tworzenieDataSet()
@@ -201,4 +241,6 @@ if __name__== "__main__":
     #rozpoznawanieTwarz()
     #KamerkaIP()
     #KamerkaIPwykrywanieTwarzy()
-    KamerkaIProzpoznawanieTwarzy()
+    #KamerkaIProzpoznawanieTwarzy()
+    #print(cv2.__version__)
+    DwieKamerkaIProzpoznawanieTwarzy()
