@@ -7,99 +7,103 @@ import sqlite3
 import urllib.request
 
 
-def wykrywanieTwarzy():
-    faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    eyeDetect = cv2.CascadeClassifier('haarcascade_eye.xml')
-    smileDetect = cv2.CascadeClassifier('haarcascade_smile.xml')
+def face_detection():
+    face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    eye_detect = cv2.CascadeClassifier('haarcascade_eye.xml')
+    smile_detect = cv2.CascadeClassifier('haarcascade_smile.xml')
     cam = cv2.VideoCapture(cv2.CAP_DSHOW)
 
-    while(True):
-        ret,img = cam.read()
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        faces = faceDetect.detectMultiScale(gray, 1.3, 2)
-        eyes = eyeDetect.detectMultiScale(gray, 1.3,5)
-        smile = smileDetect.detectMultiScale(gray, 3,5)
-        for(x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        for(x, y, w, h) in eyes:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
-       # for(x, y, w, h) in smile:
-       #     cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    while True:
+        ret, img = cam.read()
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_detect.detectMultiScale(gray, 1.3, 2)
+        eyes = eye_detect.detectMultiScale(gray, 1.3, 5)
+        smile = smile_detect.detectMultiScale(gray, 3, 5)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        for (x, y, w, h) in eyes:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        for (x, y, w, h) in smile:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
         cv2.imshow("Face", img)
-        if(cv2.waitKey(1)==ord('q')):
+        if cv2.waitKey(1) == ord('q'):
             break
     cam.release()
     cv2.destroyAllWindows()
 
-def insertOrUpdate(Id,Name):
+
+def insert_or_update(_id, name):
     conn = sqlite3.connect("Facebase.db")
-    cmd="SELECT * FROM People WHERE ID =" + str(Id)
+    cmd = "SELECT * FROM People WHERE ID =" + str(_id)
     cursor = conn.execute(cmd)
-    isRecordExist = 0
+    does_record_exists = 0
     for row in cursor:
-        isRecordExist = 1
-    if(isRecordExist==1):
-        cmd="UPDATE People SET Name="+str(Name) + " WHERE ID =" + str(Id)
+        does_record_exists = 1
+    if does_record_exists == 1:
+        cmd = "UPDATE People SET Name=" + str(name) + " WHERE ID =" + str(_id)
     else:
-        cmd = "INSERT INTO People(ID,Name) Values(" + str(Id) + "," + str(Name) + ")"
+        cmd = "INSERT INTO People(ID,Name) Values(" + str(_id) + "," + str(name) + ")"
     conn.execute(cmd)
     conn.commit()
     conn.close()
 
-def tworzenieDataSet():
-    faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+def create_data_set():
+    face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     cam = cv2.VideoCapture(0)
 
     id = input('enter user id')
-    name = input('enter your name') # ma wartość not null w bazie danych
-    insertOrUpdate(id,name)
-    sampleNum = 0
+    name = input('enter your name')  # ma wartość not null w bazie danych
+    insert_or_update(id, name)
+    sample_num = 0
 
-    while(True):
-        ret,img = cam.read()
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        faces = faceDetect.detectMultiScale(gray, 1.3, 2)
-        for(x, y, w, h) in faces:
-            sampleNum=sampleNum+1
-            cv2.imwrite("dataSet/User." + str(id)+"." + str(sampleNum)+ ".jpg", gray[y:y+h,x:x+w])
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+    while True:
+        ret, img = cam.read()
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_detect.detectMultiScale(gray, 1.3, 2)
+        for (x, y, w, h) in faces:
+            sample_num = sample_num + 1
+            cv2.imwrite("dataSet/User." + str(id) + "." + str(sample_num) + ".jpg", gray[y:y + h, x:x + w])
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.waitKey(100)
         cv2.imshow("Face", img)
         cv2.waitKey(1)
-        if(sampleNum>20):
+        if sample_num > 20:
             break
     cam.release()
     cv2.destroyAllWindows()
 
+
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 path = 'dataSet'
-def getImagesWithID(path):
 
 
-    imagePaths=[os.path.join(path,f) for f in os.listdir(path)]
+def get_images_with_id(file_name):
+    image_paths = [os.path.join(file_name, f) for f in os.listdir(file_name)]
     faces = []
-    IDs=[]
-    for imagePath in imagePaths:
-        faceImg = Image.open(imagePath).convert('L')
-        faceNp = np.array(faceImg,'uint8')
-        ID = int(os.path.split(imagePath)[-1].split('.')[1])
-        faces.append(faceNp)
-        print(ID)
-        IDs.append(ID)
-        cv2.imshow("training", faceNp)
+    ids = []
+    for imagePath in image_paths:
+        face_img = Image.open(imagePath).convert('L')
+        face_np = np.array(face_img, 'uint8')
+        _id = int(os.path.split(imagePath)[-1].split('.')[1])
+        faces.append(face_np)
+        print(_id)
+        ids.append(_id)
+        cv2.imshow("training", face_np)
         cv2.waitKey(10)
-    return IDs,faces
+    return ids, faces
 
-def tworzeniePlikuTreningowego():
-    Ids, faces = getImagesWithID(path)
-    recognizer.train(faces,np.array(Ids))
+
+def create_training_file():
+    ids, faces = get_images_with_id(path)
+    recognizer.train(faces, np.array(ids))
     recognizer.save('recognizer/trainingData.yml')
     cv2.destroyAllWindows()
 
 
-def getProfile(id):
+def get_profile(_id):
     conn = sqlite3.connect("FaceBase.db")
-    cmd = "SELECT * FROM People WHERE ID=" + str(id)
+    cmd = "SELECT * FROM People WHERE ID=" + str(_id)
     cursor = conn.execute(cmd)
     profile = None
     for row in cursor:
@@ -108,26 +112,26 @@ def getProfile(id):
     return profile
 
 
-
-def rozpoznawanieTwarz():
-    faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+def face_recognition():
+    face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     cam = cv2.VideoCapture(cv2.CAP_DSHOW)
-    rec =cv2.face.LBPHFaceRecognizer_create()
+    rec = cv2.face.LBPHFaceRecognizer_create()
     rec.read("recognizer\\trainingData.yml")
-    id=0
-    fontface=cv2.FONT_HERSHEY_SIMPLEX
-    while(True):
-        ret,img = cam.read()
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        faces = faceDetect.detectMultiScale(gray, 1.3, 2)
-        for(x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            id,conf = rec.predict(gray[y:y+h,x:x+w])
-            profile = getProfile(id)
-            if(profile!=None):
-                cv2.putText(img, str(profile[1]), (x, y + h + 30), fontface, 1, (255, 0, 0), 2) #zamista str(id) -> profile
-                cv2.putText(img, str(profile[2]), (x, y + h + 60), fontface, 1, (255, 0, 0), 2)
-                cv2.putText(img, str(profile[3]), (x, y + h + 90), fontface, 1, (255, 0, 0), 2)
+    _id = 0
+    font_face = cv2.FONT_HERSHEY_SIMPLEX
+    while True:
+        ret, img = cam.read()
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_detect.detectMultiScale(gray, 1.3, 2)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            _id, conf = rec.predict(gray[y:y + h, x:x + w])
+            profile = get_profile(_id)
+            if profile is not None:
+                cv2.putText(img, str(profile[1]), (x, y + h + 30), font_face, 1, (255, 0, 0),
+                            2)  # zamista str(id) -> profile
+                cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
+                cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)
 
             '''if(id==1):
                 id="Remeq"
@@ -137,110 +141,74 @@ def rozpoznawanieTwarz():
                 id="Pawel"'''
 
         cv2.imshow("Face", img)
-        if(cv2.waitKey(1)==ord('q')):
+        if cv2.waitKey(1) == ord('q'):
             break
     cam.release()
     cv2.destroyAllWindows()
 
-def KamerkaIP():
-   url = 'http://10.5.5.54:8080/shot.jpg' # trzeba bedzie zmienic
-   while(True):
-       imgResp = urllib.request.urlopen(url)
-       imgNp = np.array(bytearray(imgResp.read()),dtype=np.uint8)
-       img=cv2.imdecode(imgNp,-1)
-       cv2.imshow('test',img)
-       if (cv2.waitKey(1) == ord('q')):
-           break
 
-
-def KamerkaIPwykrywanieTwarzy():
-    faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+def ip_camera():
     url = 'http://10.5.5.54:8080/shot.jpg'  # trzeba bedzie zmienic
-    while (True):
+    while True:
         imgResp = urllib.request.urlopen(url)
         imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
         img = cv2.imdecode(imgNp, -1)
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        faces = faceDetect.detectMultiScale(gray, 1.3, 2)
-        for(x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
         cv2.imshow('test', img)
-        if (cv2.waitKey(1) == ord('q')):
+        if cv2.waitKey(1) == ord('q'):
             break
 
-def KamerkaIProzpoznawanieTwarzy():
-    faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    url = 'http://192.168.100.3:8080//shot.jpg'  # trzeba bedzie zmienic
-    rec =cv2.face.LBPHFaceRecognizer_create()
-    rec.read("recognizer\\trainingData.yml")
-    id=0
-    fontface=cv2.FONT_HERSHEY_SIMPLEX
-    while (True):
-        imgResp = urllib.request.urlopen(url)
-        imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
-        img = cv2.imdecode(imgNp, -1)
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        faces = faceDetect.detectMultiScale(gray, 1.3, 2)
-        for(x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            id,conf = rec.predict(gray[y:y+h,x:x+w])
-            profile = getProfile(id)
-            if(profile!=None):
-                cv2.putText(img, str(profile[1]), (x, y + h + 30), fontface, 1, (255, 0, 0), 2) #zamista str(id) -> profile
-                cv2.putText(img, str(profile[2]), (x, y + h + 60), fontface, 1, (255, 0, 0), 2)
-                cv2.putText(img, str(profile[3]), (x, y + h + 90), fontface, 1, (255, 0, 0), 2)
+
+def ip_camera_face_detection():
+    face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    url = 'http://10.5.5.54:8080/shot.jpg'  # trzeba bedzie zmienic
+    while True:
+        img_resp = urllib.request.urlopen(url)
+        img_np = np.array(bytearray(img_resp.read()), dtype=np.uint8)
+        img = cv2.imdecode(img_np, -1)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_detect.detectMultiScale(gray, 1.3, 2)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv2.imshow('test', img)
-        if (cv2.waitKey(1) == ord('q')):
+        if cv2.waitKey(1) == ord('q'):
             break
 
-def DwieKamerkaIProzpoznawanieTwarzy(): 
-    faceDetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    url1 = 'http://192.168.100.3:8080//shot.jpg'  # trzeba bedzie zmienic
-    url2 = 'http://192.168.100.17:8080///shot.jpg'
-    rec =cv2.face.LBPHFaceRecognizer_create()
+
+def ip_camera_face_recognition():
+    face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    url = 'http://10.5.5.54:8080/shot.jpg'  # trzeba bedzie zmienic
+    rec = cv2.face.LBPHFaceRecognizer_create()
     rec.read("recognizer\\trainingData.yml")
-    id=0
-    fontface=cv2.FONT_HERSHEY_SIMPLEX
-    while (True):
-        imgResp1 = urllib.request.urlopen(url1)
-        imgResp2 = urllib.request.urlopen(url2)
-        imgNp1 = np.array(bytearray(imgResp1.read()), dtype=np.uint8)
-        imgNp2 = np.array(bytearray(imgResp2.read()), dtype=np.uint8)
-        img1 = cv2.imdecode(imgNp1, -1)
-        gray1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
-        faces1 = faceDetect.detectMultiScale(gray1, 1.3, 2)
-        img2 = cv2.imdecode(imgNp2, -1)
-        gray2 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
-        faces2 = faceDetect.detectMultiScale(gray2, 1.3, 2)
-        for(x, y, w, h) in faces1:
-            cv2.rectangle(img1, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            id,conf = rec.predict(gray1[y:y+h,x:x+w])
-            profile = getProfile(id)
-            if(profile!=None):
-                cv2.putText(img1, str(profile[1]), (x, y + h + 30), fontface, 1, (255, 0, 0), 2) #zamista str(id) -> profile
-                cv2.putText(img1, str(profile[2]), (x, y + h + 60), fontface, 1, (255, 0, 0), 2)
-                cv2.putText(img1, str(profile[3]), (x, y + h + 90), fontface, 1, (255, 0, 0), 2)
-        for(x, y, w, h) in faces2:
-            cv2.rectangle(img2, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            id,conf = rec.predict(gray2[y:y+h,x:x+w])
-            profile = getProfile(id)
-            if(profile!=None):
-                cv2.putText(img2, str(profile[1]), (x, y + h + 30), fontface, 1, (255, 0, 0), 2) #zamista str(id) -> profile
-                cv2.putText(img2, str(profile[2]), (x, y + h + 60), fontface, 1, (255, 0, 0), 2)
-                cv2.putText(img2, str(profile[3]), (x, y + h + 90), fontface, 1, (255, 0, 0), 2)
-        cv2.imshow('test1', img1)
-        cv2.imshow('test2', img2)
-        if (cv2.waitKey(1) == ord('q')):
+    _id = 0
+    font_face = cv2.FONT_HERSHEY_SIMPLEX
+    while True:
+        img_resp = urllib.request.urlopen(url)
+        img_np = np.array(bytearray(img_resp.read()), dtype=np.uint8)
+        img = cv2.imdecode(img_np, -1)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_detect.detectMultiScale(gray, 1.3, 2)
+        for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            _id, conf = rec.predict(gray[y:y + h, x:x + w])
+            profile = get_profile(_id)
+            if profile is not None:
+                cv2.putText(img, str(profile[1]), (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
+                # zamist str(id) -> profile
+                cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
+                cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)
+        cv2.imshow('test', img)
+        if cv2.waitKey(1) == ord('q'):
             break
 
-if __name__== "__main__":
-    #wykrywanieTwarzy()
-    #tworzenieDataSet()
-    #getImagesWithID(path)
-    #tworzeniePlikuTreningowego()
-    #rozpoznawanieTwarz()
-    #KamerkaIP()
-    #KamerkaIPwykrywanieTwarzy()
-    #KamerkaIProzpoznawanieTwarzy()
-    #print(cv2.__version__)
-    DwieKamerkaIProzpoznawanieTwarzy()
+
+if __name__ == "__main__":
+    # face_detection()
+    # create_data_set()
+    # get_images_with_id(file_name)
+    # create_training_file()
+    # face_recognition()
+    # ip_camera()
+    # ip_camera_face_detection()
+    ip_camera_face_recognition()
+
+
