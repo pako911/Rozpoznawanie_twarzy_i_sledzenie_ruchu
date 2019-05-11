@@ -75,6 +75,7 @@ def create_data_set():
 
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
+
 path = 'dataSet'
 
 
@@ -202,13 +203,15 @@ def ip_camera_face_recognition():
 
 
 if __name__ == "__main__":
-    # face_detection()
+     face_detection()
     # create_data_set()
     # get_images_with_id(file_name)
     # create_training_file()
     # face_recognition()
     # ip_camera()
     # ip_camera_face_detection()
-    ip_camera_face_recognition()
+    #ip_camera_face_recognition()
+
+    #taktyczny komentarz
 
 
