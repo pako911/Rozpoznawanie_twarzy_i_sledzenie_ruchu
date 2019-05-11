@@ -149,7 +149,7 @@ def face_recognition():
 
 
 def ip_camera():
-    url = 'http://10.5.5.54:8080/shot.jpg'  # trzeba bedzie zmienic
+    url = 'http://10.5.5.26:8080/shot.jpg'  # trzeba bedzie zmienic
     while True:
         imgResp = urllib.request.urlopen(url)
         imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
@@ -161,7 +161,7 @@ def ip_camera():
 
 def ip_camera_face_detection():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    url = 'http://10.5.5.54:8080/shot.jpg'  # trzeba bedzie zmienic
+    url = 'http://10.5.5.26:8080/shot.jpg'  # trzeba bedzie zmienic
     while True:
         img_resp = urllib.request.urlopen(url)
         img_np = np.array(bytearray(img_resp.read()), dtype=np.uint8)
@@ -177,7 +177,7 @@ def ip_camera_face_detection():
 
 def ip_camera_face_recognition():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    url = 'http://10.5.5.54:8080/shot.jpg'  # trzeba bedzie zmienic
+    url = 'http://10.5.5.26:8080/shot.jpg'  # trzeba bedzie zmienic
     rec = cv2.face.LBPHFaceRecognizer_create()
     rec.read("recognizer\\trainingData.yml")
     _id = 0
