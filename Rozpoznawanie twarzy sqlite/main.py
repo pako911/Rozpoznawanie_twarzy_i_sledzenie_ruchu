@@ -241,6 +241,23 @@ def detecting_object():
         if cv2.waitKey(1) == ord('q'):
             break
 
+def person_detection():
+    cap = cv2.VideoCapture(cv2.CAP_DSHOW)
+    human_cascade = cv2.CascadeClassifier('haarcascade_upperbody.xml')
+
+    while True:
+        ret,frame = cap.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        human = human_cascade.detectMultiScale(gray,1.1,4)
+
+        for(x,y,w,h) in human:
+            cv2.rectangle(frame, (x,y),(x+w,y+h),(0,0,220),3)
+        cv2.imshow('video',frame)
+        if(cv2.waitKey(25) & 0xFF == ord('q')):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
 
 if __name__ == "__main__":
      #face_detection()
@@ -251,8 +268,8 @@ if __name__ == "__main__":
     # ip_camera()
     # ip_camera_face_detection()
     #ip_camera_face_recognition()
-    detecting_object() #wykrywanie niebieskiego obiektu
-
+    #detecting_object() #wykrywanie niebieskiego obiektu
+    person_detection()
     #taktyczny komentarz
 
 
