@@ -203,9 +203,9 @@ def ip_camera_face_recognition():
 
 if __name__ == "__main__":
     # face_detection()
-    # create_data_set()
+    create_data_set()
     # get_images_with_id(file_name)
-    # create_training_file()
+    create_training_file()
     # face_recognition()
     # ip_camera()
     # ip_camera_face_detection()
