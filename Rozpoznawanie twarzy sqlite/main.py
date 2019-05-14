@@ -209,6 +209,6 @@ if __name__ == "__main__":
     # face_recognition()
     # ip_camera()
     # ip_camera_face_detection()
-    ip_camera_face_recognition()
+    # ip_camera_face_recognition()
 
 
