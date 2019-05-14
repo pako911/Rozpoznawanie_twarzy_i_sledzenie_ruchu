@@ -29,12 +29,14 @@ def face_detection():
             break
     cam.release()
     cv2.destroyAllWindows()
+
+
 def insert_or_update(_id, name):
     conn = sqlite3.connect("FaceBaseGit.db")
     cmd = "SELECT * FROM People WHERE ID =" + str(_id)
     cursor = conn.execute(cmd)
     does_record_exists = 0
-    for row in cursor:
+    for _ in cursor:
         does_record_exists = 1
     if does_record_exists == 1:
         cmd = "UPDATE People SET Name=" + str(name) + " WHERE ID =" + str(_id)
@@ -43,6 +45,8 @@ def insert_or_update(_id, name):
     conn.execute(cmd)
     conn.commit()
     conn.close()
+
+
 def create_data_set():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     cam = cv2.VideoCapture(0)
@@ -67,8 +71,12 @@ def create_data_set():
             break
     cam.release()
     cv2.destroyAllWindows()
+
+
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 path = 'dataSet'
+
+
 def get_images_with_id(file_name):
     image_paths = [os.path.join(file_name, f) for f in os.listdir(file_name)]
     faces = []
@@ -83,11 +91,15 @@ def get_images_with_id(file_name):
         cv2.imshow("training", face_np)
         cv2.waitKey(10)
     return ids, faces
+
+
 def create_training_file():
     ids, faces = get_images_with_id(path)
     recognizer.train(faces, np.array(ids))
     recognizer.save('recognizer/trainingData.yml')
     cv2.destroyAllWindows()
+
+
 def get_profile(_id):
     conn = sqlite3.connect("FaceBaseGit.db")
     cmd = "SELECT * FROM People WHERE ID=" + str(_id)
@@ -97,13 +109,16 @@ def get_profile(_id):
         profile = row
     conn.close()
     return profile
+
+
 def face_recognition():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     cam = cv2.VideoCapture(cv2.CAP_DSHOW)
-    rec = cv2.face.LBPHFaceRecognizer_create()
+    rec = cv2.face.LBPHFaceRecognizer_create(1, 8, 8, 8, 0.0)
     rec.read("recognizer\\trainingData.yml")
     _id = 0
     font_face = cv2.FONT_HERSHEY_SIMPLEX
+    model = cv2.eigen
     while True:
         ret, img = cam.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -112,24 +127,29 @@ def face_recognition():
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
             _id, conf = rec.predict(gray[y:y + h, x:x + w])
             profile = get_profile(_id)
-            if profile is not None:
-                cv2.putText(img, str(profile[1]), (x, y + h + 30), font_face, 1, (255, 0, 0), 2)  # zamista str(id) -> profile
+            print(conf)
+            '''if profile is not None:
+                cv2.putText(img, str(profile[1]), (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
                 cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
-                cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)
-
-
-            '''if(id==1):
-                id="Remeq"
-            elif(id==2):
-                id="Pan za STOCKA"
-            elif(id==3):
-                id="Pawel"'''
+                cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)'''
+            if profile is not None:
+                if conf > 60:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
+                    cv2.putText(img, "unknown", (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
+                else:
+                    _id, conf = rec.predict(gray[y:y + h, x:x + w])
+                    profile = get_profile(_id)
+                    cv2.putText(img, str(profile[1]), (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
+                    cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
+                    cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)
 
         cv2.imshow("Face", img)
         if cv2.waitKey(1) == ord('q'):
             break
+
     cam.release()
     cv2.destroyAllWindows()
+
+
 def ip_camera():
     url = 'http://10.5.5.26:8080/shot.jpg'  # trzeba bedzie zmienic
     while True:
@@ -139,6 +159,8 @@ def ip_camera():
         cv2.imshow('test', img)
         if cv2.waitKey(1) == ord('q'):
             break
+
+
 def ip_camera_face_detection():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     url = 'http://10.5.5.26:8080/shot.jpg'  # trzeba bedzie zmienic
@@ -153,6 +175,8 @@ def ip_camera_face_detection():
         cv2.imshow('test', img)
         if cv2.waitKey(1) == ord('q'):
             break
+
+
 def ip_camera_face_recognition():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     url = 'http://10.5.5.26:8080/shot.jpg'  # trzeba bedzie zmienic
@@ -178,6 +202,8 @@ def ip_camera_face_recognition():
         cv2.imshow('test', img)
         if cv2.waitKey(1) == ord('q'):
             break
+
+
 def detecting_object():
     lowerBound = np.array([110,50,50])
     upperBound = np.array([130,255,255])
@@ -218,6 +244,8 @@ def detecting_object():
         cv2.imshow("cam", img)
         if cv2.waitKey(1) == ord('q'):
             break
+
+
 def person_detection():
     cap = cv2.VideoCapture(cv2.CAP_DSHOW)
     human_cascade = cv2.CascadeClassifier('haarcascade_upperbody.xml')
@@ -230,7 +258,7 @@ def person_detection():
 
         for(x,y,w,h) in human:
             cv2.rectangle(frame, (x,y),(x+w,y+h),(0,0,220),3)
-        cv2.imshow('video',frame)
+        cv2.imshow('video', frame)
         if(cv2.waitKey(25) & 0xFF == ord('q')):
             break
     cap.release()
@@ -242,8 +270,8 @@ if __name__ == "__main__":
     # face_detection()
     # create_data_set()
     # get_images_with_id(file_name)
-     #create_training_file()
-     face_recognition()
+    # create_training_file()
+    face_recognition()
     # ip_camera()
     # ip_camera_face_detection()
     #ip_camera_face_recognition()
