@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5acda8a4-13da-4edd-9942-32235156f656" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FaceBaseGit.db" beforeDir="false" afterPath="$PROJECT_DIR$/FaceBaseGit.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dataSet/User.1.1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/dataSet/User.1.1.jpg" afterDir="false" />
@@ -27,6 +28,11 @@
       <change beforePath="$PROJECT_DIR$/dataSet/User.1.9.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/dataSet/User.1.9.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recognizer/trainingData.yml" beforeDir="false" afterPath="$PROJECT_DIR$/recognizer/trainingData.yml" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/PierwszyFilmYT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PierwszyFilmYT.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+>>>>>>> parent of 436cbc2... test
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,6 +40,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Rozpoznawanie_twarzy_sqlite$main.coverage" NAME="main Coverage Results" MODIFIED="1557862049451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
@@ -59,13 +66,20 @@
   <component name="FavoritesManager">
     <favorites_list name="Rozpoznawanie twarzy sqlite" />
   </component>
+=======
+>>>>>>> parent of 436cbc2... test
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="1265">
               <caret line="142" column="100" lean-forward="true" selection-start-line="142" selection-start-column="100" selection-end-line="142" selection-end-column="100" />
+=======
+            <state relative-caret-position="561">
+              <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
+>>>>>>> parent of 436cbc2... test
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -104,6 +118,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+<<<<<<< HEAD
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -116,6 +131,10 @@
           <select />
         </subPane>
       </pane>
+=======
+      <pane id="ProjectPane" />
+      <pane id="Scope" />
+>>>>>>> parent of 436cbc2... test
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -174,6 +193,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554536550595</updated>
+<<<<<<< HEAD
       <workItem from="1557854115847" duration="35000" />
       <workItem from="1557854376459" duration="7910000" />
     </task>
@@ -189,6 +209,17 @@
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49846154" weight="0.29271916" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50153846" side_tool="true" weight="0.20358422" />
+=======
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19762062" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+>>>>>>> parent of 436cbc2... test
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49892473" visible="true" weight="0.19053549" />
@@ -199,9 +230,13 @@
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32876712" />
       <window_info anchor="bottom" id="Python Console" order="9" />
+<<<<<<< HEAD
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50107527" side_tool="true" weight="0.33001244" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
+=======
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50033045" side_tool="true" visible="true" weight="0.3286119" />
+>>>>>>> parent of 436cbc2... test
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -209,17 +244,19 @@
       <window_info anchor="right" id="Database" order="4" weight="0.3297491" />
     </layout>
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
-  </component>
   <component name="editorHistoryManager">
     <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/874e47b1-9051-4521-b2a5-09e7f3b058cd/console.sql">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="1265">
           <caret line="142" column="100" lean-forward="true" selection-start-line="142" selection-start-column="100" selection-end-line="142" selection-end-column="100" />
+=======
+        <state relative-caret-position="561">
+          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
+>>>>>>> parent of 436cbc2... test
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>

@@ -114,7 +114,7 @@ def get_profile(_id):
 def face_recognition():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     cam = cv2.VideoCapture(cv2.CAP_DSHOW)
-    rec = cv2.face.LBPHFaceRecognizer_create(1, 8, 8, 8, 0.0)
+    rec = cv2.face.LBPHFaceRecognizer_create()
     rec.read("recognizer\\trainingData.yml")
     _id = 0
     font_face = cv2.FONT_HERSHEY_SIMPLEX
@@ -143,7 +143,8 @@ def face_recognition():
                     cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)
 
         cv2.imshow("Face", img)
-        if cv2.waitKey(1) == ord('q'):
+        k = cv2.waitKey(30) & 0xff
+        if k == 27:
             break
 
     cam.release()
@@ -265,18 +266,43 @@ def person_detection():
     cv2.destroyAllWindows()
 
 
+def motion_detector():
+    cap = cv2.VideoCapture(cv2.CAP_DSHOW)  # nagranie z kamery
+    # cap = cv2.VideoCapture('walking_people.mp4')  # nagranie ludzi z yt
+    mog2 = cv2.createBackgroundSubtractorMOG2()
+
+    # zapisywanie wideo
+    # fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+    # original_out = cv2.VideoWriter('original_out.avi', fourcc, 20.0, (640, 480))
+    # mog2_out = cv2.VideoWriter('mog2_out.avi', fourcc, 20.0, (640, 480), isColor=False)
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        fgmask = mog2.apply(frame)
+        cv2.imshow('frame1', frame)
+        cv2.imshow('frame2', fgmask)
+        # original_out.write(frame)  # zapisywanie obrazu orginalnego
+        # mog2_out.write(fgmask) # zapisywanie wykrywania ruchu
+        k = cv2.waitKey(30) & 0xff
+        if k == 27:
+            break
+
+    cap.release()
+    # original_out.release()
+    # mog2_out.release()
+    cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     # face_detection()
     # create_data_set()
     # get_images_with_id(file_name)
     # create_training_file()
-    face_recognition()
+    # face_recognition()
     # ip_camera()
     # ip_camera_face_detection()
-    #ip_camera_face_recognition()
-    #detecting_object() #wykrywanie niebieskiego obiektu
-    #person_detection()
+    # ip_camera_face_recognition()
+    motion_detector()
 
 
 
