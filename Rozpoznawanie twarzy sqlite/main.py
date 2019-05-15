@@ -47,6 +47,7 @@ def insert_or_update(_id, name):
     conn.close()
 
 
+
 def create_data_set():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     cam = cv2.VideoCapture(0)
@@ -118,7 +119,7 @@ def face_recognition():
     rec.read("recognizer\\trainingData.yml")
     _id = 0
     font_face = cv2.FONT_HERSHEY_SIMPLEX
-    model = cv2.eigen
+   # model = cv2.eigen
     while True:
         ret, img = cam.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -133,7 +134,7 @@ def face_recognition():
                 cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
                 cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)'''
             if profile is not None:
-                if conf > 60:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
+                if conf > 130:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
                     cv2.putText(img, "unknown", (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
                 else:
                     _id, conf = rec.predict(gray[y:y + h, x:x + w])
@@ -248,7 +249,8 @@ def detecting_object():
 
 
 def person_detection():
-    cap = cv2.VideoCapture(cv2.CAP_DSHOW)
+    #cap = cv2.VideoCapture(cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture('walking_people.mp4')
     human_cascade = cv2.CascadeClassifier('haarcascade_upperbody.xml')
 
     while True:
@@ -258,7 +260,7 @@ def person_detection():
         human = human_cascade.detectMultiScale(gray,1.1,4)
 
         for(x,y,w,h) in human:
-            cv2.rectangle(frame, (x,y),(x+w,y+h),(0,0,220),3)
+            cv2.rectangle(frame, (x,y),(x+w,y+h),(0,0,220),4)
         cv2.imshow('video', frame)
         if(cv2.waitKey(25) & 0xFF == ord('q')):
             break
@@ -266,9 +268,10 @@ def person_detection():
     cv2.destroyAllWindows()
 
 
+
 def motion_detector():
-    cap = cv2.VideoCapture(cv2.CAP_DSHOW)  # nagranie z kamery
-    # cap = cv2.VideoCapture('walking_people.mp4')  # nagranie ludzi z yt
+    #cap = cv2.VideoCapture(cv2.CAP_DSHOW)  # nagranie z kamery
+    cap = cv2.VideoCapture('walking_people.mp4')  # nagranie ludzi z yt
     mog2 = cv2.createBackgroundSubtractorMOG2()
 
     # zapisywanie wideo
@@ -278,7 +281,8 @@ def motion_detector():
 
     while cap.isOpened():
         ret, frame = cap.read()
-        fgmask = mog2.apply(frame)
+        frame1=frame/8
+        fgmask = mog2.apply(frame1)
         cv2.imshow('frame1', frame)
         cv2.imshow('frame2', fgmask)
         # original_out.write(frame)  # zapisywanie obrazu orginalnego
@@ -292,17 +296,99 @@ def motion_detector():
     # mog2_out.release()
     cv2.destroyAllWindows()
 
+def motion_detector_cam():
+    cap = cv2.VideoCapture(cv2.CAP_DSHOW)  # nagranie z kamery
+    #cap = cv2.VideoCapture('walking_people.mp4')  # nagranie ludzi z yt
+    mog2 = cv2.createBackgroundSubtractorMOG2()
+
+    # zapisywanie wideo
+    # fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+    # original_out = cv2.VideoWriter('original_out.avi', fourcc, 20.0, (640, 480))
+    # mog2_out = cv2.VideoWriter('mog2_out.avi', fourcc, 20.0, (640, 480), isColor=False)
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        frame1=frame
+        fgmask = mog2.apply(frame1)
+        cv2.imshow('frame1', frame)
+        cv2.imshow('frame2', fgmask)
+        # original_out.write(frame)  # zapisywanie obrazu orginalnego
+        # mog2_out.write(fgmask) # zapisywanie wykrywania ruchu
+        k = cv2.waitKey(30) & 0xff
+        if k == 27:
+            break
+
+    cap.release()
+    # original_out.release()
+    # mog2_out.release()
+    cv2.destroyAllWindows()
+
+def display_DB():
+    conn = sqlite3.connect("FaceBaseGit.db")
+    cmd = "SELECT * FROM People"
+    cursor = conn.execute(cmd)
+
+    for row in cursor:
+        print(row)
+
+def count_DB():
+    conn = sqlite3.connect("FaceBaseGit.db")
+    cmd = "SELECT COUNT(ID) FROM People"
+    cursor = conn.execute(cmd)
+    i =0
+    for row in cursor:
+        i = int(row[0])
+    print(i)
+
+
+def insert_or_update2(_id,name, age,gender):# funkcja do modyfikowania bazy danych
+    conn = sqlite3.connect("FaceBaseGit.db")
+    cmd = "SELECT * FROM People WHERE ID =" + str(_id)
+    cursor = conn.execute(cmd)
+    does_record_exists = 0
+    for _ in cursor:
+        does_record_exists = 1
+    if does_record_exists == 1:
+        cmd = "UPDATE People SET Age=" + str(age) + "," + "Gender=" + str(gender)+"," + "Name=" +str(name) + " WHERE ID =" + str(_id)
+    else:
+        cmd = "INSERT INTO People(ID,Name,Age,Gender) Values(" + str(_id) + "," + str(name) +"," + str(age) + "," + str(gender) + ")"
+    conn.execute(cmd)
+    conn.commit()
+    conn.close()
+
+
+def create_data_set2(): # funkcja do modyfikowania bazy danych
+    face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    cam = cv2.VideoCapture(0)
+
+    id = input('enter user id')
+    name = input('enter your name')  # ma wartość not null w bazie danych
+    age = input('enter your age')
+    gender = input('enter your gender')
+    insert_or_update2(id, name,age,gender)
+
+
 
 if __name__ == "__main__":
     # face_detection()
     # create_data_set()
     # get_images_with_id(file_name)
     # create_training_file()
-    # face_recognition()
     # ip_camera()
     # ip_camera_face_detection()
     # ip_camera_face_recognition()
-    motion_detector()
+    #insert_or_update2(7,names, 23, 1)
+   # display_DB()
+   # create_data_set2()
+   # display_DB()
+   # count_DB()
+
+     person_detection()
+    #motion_detector()
+    #motion_detector_cam()
+    # face_recognition()
+
+
 
 
 
