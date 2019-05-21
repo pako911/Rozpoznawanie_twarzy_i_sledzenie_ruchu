@@ -17,13 +17,15 @@ def face_detection():
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = face_detect.detectMultiScale(gray, 1.3, 2)
         eyes = eye_detect.detectMultiScale(gray, 1.3, 5)
-        smile = smile_detect.detectMultiScale(gray, 3, 5)
+        smile = smile_detect.detectMultiScale(gray, 1.3, 5)
+        i = 0
         for (x, y, w, h) in faces:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        for (x, y, w, h) in eyes:
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-        for (x, y, w, h) in smile:
-            cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            i = i + 1
+        #for (x, y, w, h) in eyes:
+         #   cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        #for (x, y, w, h) in smile:
+         #   cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
         cv2.imshow("Face", img)
         if cv2.waitKey(1) == ord('q'):
             break
@@ -123,7 +125,11 @@ def face_recognition():
     while True:
         ret, img = cam.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        faces = face_detect.detectMultiScale(gray, 1.3, 2)
+        faces = face_detect.detectMultiScale(gray, 1.5, 5)
+        blabla = np.array(faces)
+        i = blabla.size
+        i = i / 4
+        cv2.putText(img, str(i),(100,200), font_face, 1, (255,255,0),2)
         for (x, y, w, h) in faces:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
             _id, conf = rec.predict(gray[y:y + h, x:x + w])
@@ -134,7 +140,7 @@ def face_recognition():
                 cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
                 cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)'''
             if profile is not None:
-                if conf > 130:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
+                if conf > 100:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
                     cv2.putText(img, "unknown", (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
                 else:
                     _id, conf = rec.predict(gray[y:y + h, x:x + w])
@@ -370,7 +376,7 @@ def create_data_set2(): # funkcja do modyfikowania bazy danych
 
 
 if __name__ == "__main__":
-    # face_detection()
+    #face_detection()
     # create_data_set()
     # get_images_with_id(file_name)
     # create_training_file()
@@ -382,11 +388,10 @@ if __name__ == "__main__":
    # create_data_set2()
    # display_DB()
    # count_DB()
-
-     person_detection()
-    #motion_detector()
+    #person_detection()
+    #motion_detector
     #motion_detector_cam()
-    # face_recognition()
+    face_recognition()
 
 
 
