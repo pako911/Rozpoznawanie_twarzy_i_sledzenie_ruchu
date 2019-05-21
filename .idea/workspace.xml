@@ -1,52 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="629fec20-d96e-446d-a660-941a6d4732f4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.1.12.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.1.14.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.1.15.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.1.2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.1.3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.1.5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.1.6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.1.9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.10.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.11.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.12.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.13.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.14.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.15.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.16.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.17.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.18.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.19.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.20.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.21.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.7.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.2.9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.10.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.11.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.12.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.7.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/dataSet/User.3.9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/recognizer/trainingData.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/recognizer/trainingData.yml" afterDir="false" />
-    </list>
+    <list default="true" id="629fec20-d96e-446d-a660-941a6d4732f4" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="365" column="62" lean-forward="true" selection-start-line="365" selection-start-column="62" selection-end-line="365" selection-end-column="62" />
+            <state relative-caret-position="-459">
+              <caret line="30" column="17" lean-forward="true" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -95,7 +50,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -112,6 +66,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -232,7 +187,21 @@
       <option name="project" value="LOCAL" />
       <updated>1557919182140</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Zliczanie osob">
+      <created>1558445353136</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1558445353137</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Zliczanie osob">
+      <created>1558445394690</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1558445394691</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -275,13 +244,14 @@
     <MESSAGE value="Kaskady Haara" />
     <MESSAGE value="Poprawiona baza danych" />
     <MESSAGE value="Poprawiona baza danych1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Poprawiona baza danych1" />
+    <MESSAGE value="Zliczanie osob" />
+    <option name="LAST_COMMIT_MESSAGE" value="Zliczanie osob" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Rozpoznawanie twarzy sqlite/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="365" column="62" lean-forward="true" selection-start-line="365" selection-start-column="62" selection-end-line="365" selection-end-column="62" />
+        <state relative-caret-position="-459">
+          <caret line="30" column="17" lean-forward="true" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
