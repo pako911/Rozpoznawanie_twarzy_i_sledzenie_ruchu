@@ -11,6 +11,7 @@ class My_Form(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.face_recognition)
         self.ui.pushButton_2.clicked.connect(self.display_DB)
+        self.ui.ipCameraButton.clicked.connect(self.ip_camera_face_recognition)
 
     def face_detection(self):
         face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
@@ -161,15 +162,53 @@ class My_Form(QtWidgets.QMainWindow):
         cam.release()
         cv2.destroyAllWindows()
 
+    def ip_camera_face_recognition(self):
+        face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+        ip_addr = self.ui.ipCameraAddress.toPlainText()
+        # url = 'http://192.168.0.12:8080/shot.jpg'  # trzeba bedzie zmienic
+        url = 'http://' + ip_addr + ':8080/shot.jpg'
+        rec = cv2.face.LBPHFaceRecognizer_create()
+        rec.read("recognizer\\trainingData.yml")
+        _id = 0
+        font_face = cv2.FONT_HERSHEY_SIMPLEX
+        while True:
+            img_resp = urllib.request.urlopen(url)
+            img_np = np.array(bytearray(img_resp.read()), dtype=np.uint8)
+            img = cv2.imdecode(img_np, -1)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            faces = face_detect.detectMultiScale(gray, 1.3, 2)
+            blabla = np.array(faces)
+            i = blabla.size
+            i = i / 4
+            cv2.putText(img, str(i), (100, 200), font_face, 1, (255, 255, 0), 2)
+            for (x, y, w, h) in faces:
+                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                _id, conf = rec.predict(gray[y:y + h, x:x + w])
+                profile = self.get_profile(_id)
+                if profile is not None:
+                    cv2.putText(img, str(profile[1]), (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
+                    # zamist str(id) -> profile
+                    cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
+                    cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)
+            cv2.putText(img, "Press [ESC] to exit", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            cv2.imshow("Face", img)
+            k = cv2.waitKey(30) & 0xff
+            if k == 27:
+                break
+        cv2.destroyAllWindows()
+
     def display_DB(self):
         conn = sqlite3.connect("FaceBaseGit.db")
         cmd = "SELECT * FROM People"
         cursor = conn.execute(cmd)
+        result = cursor.fetchall()
         text = ''
-        for row in cursor:
-            text = text.format(row)
-
+        for row in result:
+            text += str(row) + '\n'
+        # cursor.close()
+        # conn.close()
         self.ui.textBrowser.setText(text)
+
 
 def main():
     # app = QtGui.QGuiApplication(sys.argv)

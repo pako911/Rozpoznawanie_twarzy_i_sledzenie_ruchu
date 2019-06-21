@@ -189,7 +189,7 @@ def ip_camera_face_detection():
 
 def ip_camera_face_recognition():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    url = 'http://192.168.100.3:8080/shot.jpg'  # trzeba bedzie zmienic
+    url = 'http://192.168.0.12:8080/shot.jpg'  # trzeba bedzie zmienic
     rec = cv2.face.LBPHFaceRecognizer_create()
     rec.read("recognizer\\trainingData.yml")
     _id = 0
@@ -340,7 +340,6 @@ def display_DB():
     conn = sqlite3.connect("FaceBaseGit.db")
     cmd = "SELECT * FROM People"
     cursor = conn.execute(cmd)
-
     for row in cursor:
         print(row)
 
