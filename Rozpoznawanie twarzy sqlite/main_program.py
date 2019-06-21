@@ -1,6 +1,13 @@
-import sys, cv2, numpy as np, os, sqlite3, urllib.request
+import cv2
+import numpy as np
+import os
+import sqlite3
+import sys
+import urllib.request
+
 from PIL import Image
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets, QtCore
+
 from AppGUI import Ui_MainWindow
 
 
@@ -132,7 +139,7 @@ class My_Form(QtWidgets.QMainWindow):
             blabla = np.array(faces)
             i = blabla.size
             i = i / 4
-            cv2.putText(img, str(i), (100, 200), font_face, 1, (255, 255, 0), 2)
+            cv2.putText(img, "number of people: " + str(i), (10, 50), font_face, 0.7, (255, 255, 0), 2)
             for (x, y, w, h) in faces:
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 _id, conf = rec.predict(gray[y:y + h, x:x + w])
@@ -165,14 +172,18 @@ class My_Form(QtWidgets.QMainWindow):
     def ip_camera_face_recognition(self):
         face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         ip_addr = self.ui.ipCameraAddress.toPlainText()
-        # url = 'http://192.168.0.12:8080/shot.jpg'  # trzeba bedzie zmienic
         url = 'http://' + ip_addr + ':8080/shot.jpg'
         rec = cv2.face.LBPHFaceRecognizer_create()
         rec.read("recognizer\\trainingData.yml")
         _id = 0
         font_face = cv2.FONT_HERSHEY_SIMPLEX
         while True:
-            img_resp = urllib.request.urlopen(url)
+            try:
+                img_resp = urllib.request.urlopen(url)
+            except urllib.error.URLError:
+                errmsg = QtWidgets.QErrorMessage(self)
+                errmsg.showMessage('Invalid Ip address')
+                break
             img_np = np.array(bytearray(img_resp.read()), dtype=np.uint8)
             img = cv2.imdecode(img_np, -1)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -180,7 +191,7 @@ class My_Form(QtWidgets.QMainWindow):
             blabla = np.array(faces)
             i = blabla.size
             i = i / 4
-            cv2.putText(img, str(i), (100, 200), font_face, 1, (255, 255, 0), 2)
+            cv2.putText(img, "number of people: " + str(i), (20, 20), font_face, 1, (255, 255, 0), 2)
             for (x, y, w, h) in faces:
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 _id, conf = rec.predict(gray[y:y + h, x:x + w])
