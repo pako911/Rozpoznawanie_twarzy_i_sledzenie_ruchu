@@ -10,6 +10,7 @@ def face_detection():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     eye_detect = cv2.CascadeClassifier('haarcascade_eye.xml')
     smile_detect = cv2.CascadeClassifier('haarcascade_smile.xml')
+    print("Press Q to quit")
     cam = cv2.VideoCapture(cv2.CAP_DSHOW)
 
     while True:
@@ -22,8 +23,8 @@ def face_detection():
         for (x, y, w, h) in faces:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
             i = i + 1
-        #for (x, y, w, h) in eyes:
-         #   cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        for (x, y, w, h) in eyes:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
         #for (x, y, w, h) in smile:
          #   cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
         cv2.imshow("Face", img)
@@ -121,6 +122,7 @@ def face_recognition():
     rec.read("recognizer\\trainingData.yml")
     _id = 0
     font_face = cv2.FONT_HERSHEY_SIMPLEX
+    print("press ESC to quit")
    # model = cv2.eigen
     while True:
         ret, img = cam.read()
@@ -134,7 +136,7 @@ def face_recognition():
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
             _id, conf = rec.predict(gray[y:y + h, x:x + w])
             profile = get_profile(_id)
-            print(conf)
+            #print(conf)
             '''if profile is not None:
                 cv2.putText(img, str(profile[1]), (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
                 cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
@@ -187,7 +189,7 @@ def ip_camera_face_detection():
 
 def ip_camera_face_recognition():
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    url = 'http://10.5.5.26:8080/shot.jpg'  # trzeba bedzie zmienic
+    url = 'http://192.168.100.3:8080/shot.jpg'  # trzeba bedzie zmienic
     rec = cv2.face.LBPHFaceRecognizer_create()
     rec.read("recognizer\\trainingData.yml")
     _id = 0
@@ -198,6 +200,10 @@ def ip_camera_face_recognition():
         img = cv2.imdecode(img_np, -1)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = face_detect.detectMultiScale(gray, 1.3, 2)
+        blabla = np.array(faces)
+        i = blabla.size
+        i = i / 4
+        cv2.putText(img, str(i),(100,200), font_face, 1, (255,255,0),2)
         for (x, y, w, h) in faces:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
             _id, conf = rec.predict(gray[y:y + h, x:x + w])
@@ -210,6 +216,7 @@ def ip_camera_face_recognition():
         cv2.imshow('test', img)
         if cv2.waitKey(1) == ord('q'):
             break
+    cv2.destroyAllWindows()
 
 
 def detecting_object():
@@ -284,7 +291,7 @@ def motion_detector():
     # fourcc = cv2.VideoWriter_fourcc(*'DIVX')
     # original_out = cv2.VideoWriter('original_out.avi', fourcc, 20.0, (640, 480))
     # mog2_out = cv2.VideoWriter('mog2_out.avi', fourcc, 20.0, (640, 480), isColor=False)
-
+    print("Press ESC to quit")
     while cap.isOpened():
         ret, frame = cap.read()
         frame1=frame/8
@@ -311,7 +318,7 @@ def motion_detector_cam():
     # fourcc = cv2.VideoWriter_fourcc(*'DIVX')
     # original_out = cv2.VideoWriter('original_out.avi', fourcc, 20.0, (640, 480))
     # mog2_out = cv2.VideoWriter('mog2_out.avi', fourcc, 20.0, (640, 480), isColor=False)
-
+    print("Press ESC to quit")
     while cap.isOpened():
         ret, frame = cap.read()
         frame1=frame
@@ -344,6 +351,7 @@ def count_DB():
     i =0
     for row in cursor:
         i = int(row[0])
+    print("Liczba osób w bazie danych: ")
     print(i)
 
 
@@ -352,6 +360,7 @@ def insert_or_update2(_id,name, age,gender):# funkcja do modyfikowania bazy dany
     cmd = "SELECT * FROM People WHERE ID =" + str(_id)
     cursor = conn.execute(cmd)
     does_record_exists = 0
+
     for _ in cursor:
         does_record_exists = 1
     if does_record_exists == 1:
@@ -366,32 +375,56 @@ def insert_or_update2(_id,name, age,gender):# funkcja do modyfikowania bazy dany
 def create_data_set2(): # funkcja do modyfikowania bazy danych
     face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     cam = cv2.VideoCapture(0)
-
+    print("Name i Gender wpisywać w cudzysłowie\n")
     id = input('enter user id')
     name = input('enter your name')  # ma wartość not null w bazie danych
     age = input('enter your age')
     gender = input('enter your gender')
+    print("W celu lepszego rozpoznawnaia twarzy usunąć złe zdjęcia\n")
     insert_or_update2(id, name,age,gender)
 
+def menu():
+    print("------------------------------------------\n"
+          "press 1 for Face Detection \n"
+          "press 2 for Face Recognition\n"
+          "press 3 for Display Database\n"
+          "press 4 for Modify Database\n"
+          "press 5 for Create Dataset\n"
+          "press 6 for Create Traning File\n"
+          "press 7 for IP Camera Face Recognition\n"
+          "press 8 for Motion Detection\n"
+          "press 9 for Quit\n"
+          "------------------------------------------\n")
+def switch_if():
+    menu()
+    option = int(input("Your Option : "))
+    while option != 9:
+        if option == 1:
+            face_detection()
+        elif option == 2:
+            face_recognition()
+        elif option ==3:
+            display_DB()
+            count_DB()
+        elif option == 4:
+            create_data_set2()
+        elif option == 5:
+            create_data_set()
+        elif option == 6:
+            create_training_file()
+        elif option == 7:
+            ip_camera_face_recognition()
+        elif option ==8:
+            motion_detector_cam()
+        else:
+            print("invalid value")
+        menu()
+        option = int(input("Your Option : "))
 
 
 if __name__ == "__main__":
-    #face_detection()
-    # create_data_set()
-    # get_images_with_id(file_name)
-    # create_training_file()
-    # ip_camera()
-    # ip_camera_face_detection()
-    # ip_camera_face_recognition()
-    #insert_or_update2(7,names, 23, 1)
-    #display_DB()
-    #create_data_set2()
-    #display_DB()
-    #count_DB()
-    #person_detection()
-    #motion_detector
-    #motion_detector_cam()
-    face_recognition()
+    switch_if()
+
 
 
 
