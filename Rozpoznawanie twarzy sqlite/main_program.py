@@ -22,44 +22,43 @@ class My_Form(QtWidgets.QMainWindow):
         self.ui.pushButton_6.clicked.connect(self.motion_detector_cam)
         self.ui.pushButton_3.clicked.connect(self.db_edit)
         self.ui.pushButton_4.clicked.connect(self.create_data_set)
+        self.ui.pushButton_5.clicked.connect(self.create_training_file)
 
     def create_data_set(self):
         face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         cam = cv2.VideoCapture(0)
-
-        # id = input('enter user id')
-        # name = input('enter your name')  # ma wartość not null w bazie danych
         self.qbox = QtWidgets.QLineEdit()
-        id, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your id')
+        id, ok = QtWidgets.QInputDialog.getInt(self, ' ', 'Enter your id')
         if ok:
             name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter your name')
             if ok:
                 age, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your age')
                 if ok:
-                    gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender', ('M', 'F'), 0,
-                                                                False)
+                    gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender',
+                                                                ('Male', 'Female'), 0, False)
                     if ok:
                         self.insert_or_update2(id, "\"" + name + "\"", age, "\"" + gender + "\"")
-        sample_num = 0
+                        sample_num = 0
 
-        while True:
-            ret, img = cam.read()
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            faces = face_detect.detectMultiScale(gray, 1.3, 2)
-            for (x, y, w, h) in faces:
-                sample_num = sample_num + 1
-                cv2.imwrite("dataSet/User." + str(id) + "." + str(sample_num) + ".jpg", gray[y:y + h, x:x + w])
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.waitKey(100)
-            cv2.imshow("Face", img)
-            cv2.waitKey(1)
-            if sample_num > 20:
-                break
-        cam.release()
-        cv2.destroyAllWindows()
+                        while True:
+                            ret, img = cam.read()
+                            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                            faces = face_detect.detectMultiScale(gray, 1.3, 2)
+                            for (x, y, w, h) in faces:
+                                sample_num = sample_num + 1
+                                cv2.imwrite("dataSet/User." + str(id) + "." + str(sample_num) + ".jpg",
+                                            gray[y:y + h, x:x + w])
+                                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                                cv2.waitKey(100)
+                            cv2.imshow("Face", img)
+                            cv2.waitKey(1)
+                            if sample_num > 20:
+                                break
+                        cam.release()
+                        cv2.destroyAllWindows()
 
-    recognizer = cv2.face.LBPHFaceRecognizer_create()
-    path = 'dataSet'
+                    recognizer = cv2.face.LBPHFaceRecognizer_create()
+                    path = 'dataSet'
 
     def get_images_with_id(self, file_name):
         image_paths = [os.path.join(file_name, f) for f in os.listdir(file_name)]
@@ -100,7 +99,7 @@ class My_Form(QtWidgets.QMainWindow):
         _id = 0
         font_face = cv2.FONT_HERSHEY_SIMPLEX
         qm = QtWidgets.QMessageBox
-        ret = qm.question(self, '', "Do you want to record?", qm.Yes | qm.No)
+        ret = qm.question(self, ' ', "Do you want to record?", qm.Yes | qm.No)
         if ret == qm.Yes:
             record = True
             self.qbox = QtWidgets.QLineEdit()
@@ -187,7 +186,7 @@ class My_Form(QtWidgets.QMainWindow):
             blabla = np.array(faces)
             i = blabla.size
             i = i / 4
-            cv2.putText(img, "number of people: " + str(i), (20, 20), font_face, 1, (255, 255, 0), 2)
+            cv2.putText(img, "number of people: " + str(i), (10, 50), font_face, 1, (255, 255, 0), 2)
             for (x, y, w, h) in faces:
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 _id, conf = rec.predict(gray[y:y + h, x:x + w])
@@ -273,15 +272,17 @@ class My_Form(QtWidgets.QMainWindow):
 
     def db_edit(self):  # funkcja do modyfikowania bazy danych
         self.qbox = QtWidgets.QLineEdit()
-        id, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your id')
+        id, ok = QtWidgets.QInputDialog.getInt(self, ' ', 'Enter your id')
         if ok:
             name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter your name')
             if ok:
                 age, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your age')
                 if ok:
-                    gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender', ('M', 'F'), 0, False)
+                    gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender',
+                                                                ('Male', 'Female'), 0, False)
                     if ok:
                         self.insert_or_update2(id, "\"" + name + "\"", age, "\"" + gender + "\"")
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
