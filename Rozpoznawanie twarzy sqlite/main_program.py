@@ -103,13 +103,14 @@ class My_Form(QtWidgets.QMainWindow):
         if ret == qm.Yes:
             record = True
             self.qbox = QtWidgets.QLineEdit()
-            video_name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter video name')
+            video_name, ok = QtWidgets.QInputDialog.getText(self, ' ', 'Enter video name', QtWidgets.QLineEdit.Normal,
+                                                            'camera_video')
             if ok:
                 self.qbox.setText(str(video_name))
+                fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+                video = cv2.VideoWriter(video_name + '.avi', fourcc, 20.0, (640, 480))
             else:
-                video_name = "camera_video"
-            fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-            video = cv2.VideoWriter(video_name+'.avi', fourcc, 20.0, (640, 480))
+                record = False
         else:
             record = False
         while True:
