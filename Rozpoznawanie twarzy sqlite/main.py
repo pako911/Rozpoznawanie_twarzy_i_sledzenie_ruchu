@@ -310,8 +310,7 @@ def motion_detector():
     cv2.destroyAllWindows()
 
 def motion_detector_cam():
-    cap = cv2.VideoCapture(cv2.CAP_DSHOW)  # nagranie z kamery
-    #cap = cv2.VideoCapture('walking_people.mp4')  # nagranie ludzi z yt
+    cap = cv2.VideoCapture(cv2.CAP_DSHOW)
     mog2 = cv2.createBackgroundSubtractorMOG2()
 
     # zapisywanie wideo

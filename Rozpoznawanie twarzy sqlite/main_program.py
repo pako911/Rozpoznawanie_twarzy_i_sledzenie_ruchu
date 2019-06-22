@@ -37,7 +37,7 @@ class My_Form(QtWidgets.QMainWindow):
                     gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender',
                                                                 ('Male', 'Female'), 0, False)
                     if ok:
-                        self.insert_or_update2(id, "\"" + name + "\"", age, "\"" + gender + "\"")
+                        self.insert_or_update(id, "\"" + name + "\"", age, "\"" + gender + "\"")
                         sample_num = 0
 
                         while True:
@@ -57,8 +57,8 @@ class My_Form(QtWidgets.QMainWindow):
                         cam.release()
                         cv2.destroyAllWindows()
 
-                    recognizer = cv2.face.LBPHFaceRecognizer_create()
-                    path = 'dataSet'
+    recognizer = cv2.face.LBPHFaceRecognizer_create()
+    path = 'dataSet'
 
     def get_images_with_id(self, file_name):
         image_paths = [os.path.join(file_name, f) for f in os.listdir(file_name)]
@@ -124,11 +124,7 @@ class My_Form(QtWidgets.QMainWindow):
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 _id, conf = rec.predict(gray[y:y + h, x:x + w])
                 profile = self.get_profile(_id)
-                # print(conf)
-                '''if profile is not None:
-                    cv2.putText(img, str(profile[1]), (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
-                    cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
-                    cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)'''
+
                 if profile is not None:
                     if conf > 100:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
                         cv2.putText(img, "unknown", (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
@@ -179,6 +175,7 @@ class My_Form(QtWidgets.QMainWindow):
                 errmsg.setWindowIcon(QtGui.QIcon('error-flat.png'))
                 errmsg.showMessage('Invalid Ip address')
                 break
+
             img_np = np.array(bytearray(img_resp.read()), dtype=np.uint8)
             img = cv2.imdecode(img_np, -1)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -187,6 +184,7 @@ class My_Form(QtWidgets.QMainWindow):
             i = blabla.size
             i = i / 4
             cv2.putText(img, "number of people: " + str(i), (10, 50), font_face, 1, (255, 255, 0), 2)
+
             for (x, y, w, h) in faces:
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                 _id, conf = rec.predict(gray[y:y + h, x:x + w])
@@ -209,7 +207,6 @@ class My_Form(QtWidgets.QMainWindow):
         cap = cv2.VideoCapture(cv2.CAP_DSHOW)
         mog2 = cv2.createBackgroundSubtractorMOG2()
 
-        print("Press ESC to quit")
         while cap.isOpened():
             ret, frame = cap.read()
             frame1 = frame
@@ -235,29 +232,12 @@ class My_Form(QtWidgets.QMainWindow):
                                             QtWidgets.QTableWidgetItem(str(data)))
         conn.close()
 
-    def insert_or_update2(self, _id, name, age, gender):  # funkcja do modyfikowania bazy danych
+    def insert_or_update(self, _id, name, age, gender):  # funkcja do modyfikowania bazy danych
         conn = sqlite3.connect("FaceBaseGit.db")
         cmd = "SELECT * FROM People WHERE ID =" + str(_id)
         cursor = conn.execute(cmd)
         does_record_exists = 0
 
-        for _ in cursor:
-            does_record_exists = 1
-        if does_record_exists == 1:
-            cmd = "UPDATE People SET Age=" + str(age) + "," + "Gender=" + str(gender) + "," + "Name=" + str(
-                name) + " WHERE ID =" + str(_id)
-        else:
-            cmd = "INSERT INTO People(ID,Name,Age,Gender) Values(" + str(_id) + "," + str(name) + "," + str(
-                age) + "," + str(gender) + ")"
-        conn.execute(cmd)
-        conn.commit()
-        conn.close()
-
-    def insert_or_update2(self, _id, name, age, gender):  # funkcja do modyfikowania bazy danych
-        conn = sqlite3.connect("FaceBaseGit.db")
-        cmd = "SELECT * FROM People WHERE ID =" + str(_id)
-        cursor = conn.execute(cmd)
-        does_record_exists = 0
         for _ in cursor:
             does_record_exists = 1
         if does_record_exists == 1:
@@ -281,7 +261,7 @@ class My_Form(QtWidgets.QMainWindow):
                     gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender',
                                                                 ('Male', 'Female'), 0, False)
                     if ok:
-                        self.insert_or_update2(id, "\"" + name + "\"", age, "\"" + gender + "\"")
+                        self.insert_or_update(id, "\"" + name + "\"", age, "\"" + gender + "\"")
 
 
 def main():
