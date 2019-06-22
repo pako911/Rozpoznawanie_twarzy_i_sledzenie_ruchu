@@ -19,6 +19,7 @@ class My_Form(QtWidgets.QMainWindow):
         self.ui.pushButton.clicked.connect(self.face_recognition)
         self.ui.pushButton_2.clicked.connect(self.display_DB)
         self.ui.ipCameraButton.clicked.connect(self.ip_camera_face_recognition)
+        self.ui.pushButton_6.clicked.connect(self.motion_detector_cam)
 
     def face_detection(self):
         face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
@@ -130,8 +131,20 @@ class My_Form(QtWidgets.QMainWindow):
         rec.read("recognizer\\trainingData.yml")
         _id = 0
         font_face = cv2.FONT_HERSHEY_SIMPLEX
-        print("press ESC to quit")
-        # model = cv2.eigen
+        qm = QtWidgets.QMessageBox
+        ret = qm.question(self, '', "Do you want to record?", qm.Yes | qm.No)
+        if ret == qm.Yes:
+            record = True
+            self.qbox = QtWidgets.QLineEdit()
+            video_name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter video name')
+            if ok:
+                self.qbox.setText(str(video_name))
+            else:
+                video_name = "camera_video"
+            fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+            video = cv2.VideoWriter(video_name+'.avi', fourcc, 20.0, (640, 480))
+        else:
+            record = False
         while True:
             ret, img = cam.read()
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -158,14 +171,13 @@ class My_Form(QtWidgets.QMainWindow):
                         cv2.putText(img, str(profile[1]), (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
                         cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
                         cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)
-
-            cv2.imshow("Face", img)
             cv2.putText(img, "Press [ESC] to exit", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-            cv2.imshow("Face", img)
+            cv2.imshow("Main camera view", img)
+            if record:
+                video.write(img)
             k = cv2.waitKey(30) & 0xff
             if k == 27:
                 break
-
         cam.release()
         cv2.destroyAllWindows()
 
@@ -177,6 +189,20 @@ class My_Form(QtWidgets.QMainWindow):
         rec.read("recognizer\\trainingData.yml")
         _id = 0
         font_face = cv2.FONT_HERSHEY_SIMPLEX
+        qm = QtWidgets.QMessageBox
+        ret = qm.question(self, '', "Do you want to record?", qm.Yes | qm.No)
+        if ret == qm.Yes:
+            record = True
+            self.qbox = QtWidgets.QLineEdit()
+            video_name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter video name')
+            if ok:
+                self.qbox.setText(str(video_name))
+            else:
+                video_name = "camera_video"
+            fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+            video = cv2.VideoWriter(video_name+'.avi', fourcc, 30.0, (640, 480))
+        else:
+            record = False
         while True:
             try:
                 img_resp = urllib.request.urlopen(url)
@@ -202,13 +228,33 @@ class My_Form(QtWidgets.QMainWindow):
                     cv2.putText(img, str(profile[2]), (x, y + h + 60), font_face, 1, (255, 0, 0), 2)
                     cv2.putText(img, str(profile[3]), (x, y + h + 90), font_face, 1, (255, 0, 0), 2)
             cv2.putText(img, "Press [ESC] to exit", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-            cv2.imshow("Face", img)
+            cv2.imshow("IP camera view", img)
+            if record:
+                video.write(img)
             k = cv2.waitKey(30) & 0xff
             if k == 27:
                 break
         cv2.destroyAllWindows()
 
+    def motion_detector_cam(self):
+        cap = cv2.VideoCapture(cv2.CAP_DSHOW)  # nagranie z kamery
+        mog2 = cv2.createBackgroundSubtractorMOG2()
+
+        print("Press ESC to quit")
+        while cap.isOpened():
+            ret, frame = cap.read()
+            frame1 = frame
+            fgmask = mog2.apply(frame1)
+            cv2.imshow('Motion detection', fgmask)
+            k = cv2.waitKey(30) & 0xff
+            if k == 27:
+                break
+
+        cap.release()
+        cv2.destroyAllWindows()
+
     def display_DB(self):
+        self.ui.textBrowser.clear()
         conn = sqlite3.connect("FaceBaseGit.db")
         cmd = "SELECT * FROM People"
         cursor = conn.execute(cmd)

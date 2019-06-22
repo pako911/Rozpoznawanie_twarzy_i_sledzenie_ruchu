@@ -3,7 +3,6 @@
   <component name="dataSourceStorageLocal">
     <data-source name="FaceBaseGit" uuid="874e47b1-9051-4521-b2a5-09e7f3b058cd">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" exact-version="0" />
-      <auth-required>false</auth-required>
     </data-source>
   </component>
 </project>
