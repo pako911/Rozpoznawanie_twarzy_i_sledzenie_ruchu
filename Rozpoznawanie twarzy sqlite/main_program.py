@@ -21,29 +21,25 @@ class My_Form(QtWidgets.QMainWindow):
         self.ui.ipCameraButton.clicked.connect(self.ip_camera_face_recognition)
         self.ui.pushButton_6.clicked.connect(self.motion_detector_cam)
         self.ui.pushButton_3.clicked.connect(self.db_edit)
-
-    def insert_or_update(self, _id, name):
-        conn = sqlite3.connect("FaceBaseGit.db")
-        cmd = "SELECT * FROM People WHERE ID =" + str(_id)
-        cursor = conn.execute(cmd)
-        does_record_exists = 0
-        for _ in cursor:
-            does_record_exists = 1
-        if does_record_exists == 1:
-            cmd = "UPDATE People SET Name=" + str(name) + " WHERE ID =" + str(_id)
-        else:
-            cmd = "INSERT INTO People(ID,Name) Values(" + str(_id) + "," + str(name) + ")"
-        conn.execute(cmd)
-        conn.commit()
-        conn.close()
+        self.ui.pushButton_4.clicked.connect(self.create_data_set)
 
     def create_data_set(self):
         face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         cam = cv2.VideoCapture(0)
 
-        id = input('enter user id')
-        name = input('enter your name')  # ma wartość not null w bazie danych
-        self.insert_or_update(id, name)
+        # id = input('enter user id')
+        # name = input('enter your name')  # ma wartość not null w bazie danych
+        self.qbox = QtWidgets.QLineEdit()
+        id, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your id')
+        if ok:
+            name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter your name')
+            if ok:
+                age, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your age')
+                if ok:
+                    gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender', ('M', 'F'), 0,
+                                                                False)
+                    if ok:
+                        self.insert_or_update2(id, "\"" + name + "\"", age, "\"" + gender + "\"")
         sample_num = 0
 
         while True:
@@ -278,10 +274,14 @@ class My_Form(QtWidgets.QMainWindow):
     def db_edit(self):  # funkcja do modyfikowania bazy danych
         self.qbox = QtWidgets.QLineEdit()
         id, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your id')
-        name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter your name')
-        age, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your age')
-        gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender', ('M', 'F'), 0, False)
-        self.insert_or_update2(id, "\"" + name + "\"", age, "\"" + gender + "\"")
+        if ok:
+            name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter your name')
+            if ok:
+                age, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your age')
+                if ok:
+                    gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender', ('M', 'F'), 0, False)
+                    if ok:
+                        self.insert_or_update2(id, "\"" + name + "\"", age, "\"" + gender + "\"")
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
