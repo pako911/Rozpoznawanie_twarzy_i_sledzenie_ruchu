@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(520, 360)
+        MainWindow.resize(720, 620)
         MainWindow.setMinimumSize(QtCore.QSize(320, 320))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -49,9 +49,12 @@ class Ui_MainWindow(object):
         self.tab_2.setObjectName("tab_2")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.tab_2)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.textBrowser = QtWidgets.QTextBrowser(self.tab_2)
-        self.textBrowser.setObjectName("textBrowser")
-        self.verticalLayout_2.addWidget(self.textBrowser)
+        self.tableWidget = QtWidgets.QTableWidget(self.tab_2)
+        self.tableWidget.setRowCount(10)
+        self.tableWidget.setColumnCount(4)
+        self.tableWidget.setHorizontalHeaderLabels(['Id', 'Name', 'Age', 'Gender'])
+        self.tableWidget.setObjectName("tableWidget")
+        self.verticalLayout_2.addWidget(self.tableWidget)
         self.pushButton_2 = QtWidgets.QPushButton(self.tab_2)
         self.pushButton_2.setMinimumSize(QtCore.QSize(0, 0))
         self.pushButton_2.setObjectName("pushButton_2")
@@ -89,7 +92,7 @@ class Ui_MainWindow(object):
         self.actionKamery.setObjectName("actionKamery")
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

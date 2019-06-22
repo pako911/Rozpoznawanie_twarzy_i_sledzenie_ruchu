@@ -6,8 +6,7 @@ import sys
 import urllib.request
 
 from PIL import Image
-from PyQt5 import QtWidgets, QtCore
-
+from PyQt5 import QtWidgets, QtCore, QtGui
 from AppGUI import Ui_MainWindow
 
 
@@ -16,39 +15,12 @@ class My_Form(QtWidgets.QMainWindow):
         super(My_Form, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon('web-camera.png'))
         self.ui.pushButton.clicked.connect(self.face_recognition)
         self.ui.pushButton_2.clicked.connect(self.display_DB)
         self.ui.ipCameraButton.clicked.connect(self.ip_camera_face_recognition)
         self.ui.pushButton_6.clicked.connect(self.motion_detector_cam)
-
-    def face_detection(self):
-        face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-        eye_detect = cv2.CascadeClassifier('haarcascade_eye.xml')
-        smile_detect = cv2.CascadeClassifier('haarcascade_smile.xml')
-        print("Press Q to quit")
-        cam = cv2.VideoCapture(cv2.CAP_DSHOW)
-
-        while True:
-            ret, img = cam.read()
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            faces = face_detect.detectMultiScale(gray, 1.3, 2)
-            eyes = eye_detect.detectMultiScale(gray, 1.3, 5)
-            smile = smile_detect.detectMultiScale(gray, 1.3, 5)
-            i = 0
-            for (x, y, w, h) in faces:
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                i = i + 1
-            for (x, y, w, h) in eyes:
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-            # for (x, y, w, h) in smile:
-            #   cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-            cv2.putText(img, "Press [ESC] to exit", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2)
-            cv2.imshow("Face", img)
-            k = cv2.waitKey(1)
-            if k == 27:
-                break
-        cam.release()
-        cv2.destroyAllWindows()
+        self.ui.pushButton_3.clicked.connect(self.db_edit)
 
     def insert_or_update(self, _id, name):
         conn = sqlite3.connect("FaceBaseGit.db")
@@ -190,7 +162,7 @@ class My_Form(QtWidgets.QMainWindow):
         _id = 0
         font_face = cv2.FONT_HERSHEY_SIMPLEX
         qm = QtWidgets.QMessageBox
-        ret = qm.question(self, '', "Do you want to record?", qm.Yes | qm.No)
+        ret = qm.question(self, ' ', "Do you want to record?", qm.Yes | qm.No)
         if ret == qm.Yes:
             record = True
             self.qbox = QtWidgets.QLineEdit()
@@ -208,6 +180,8 @@ class My_Form(QtWidgets.QMainWindow):
                 img_resp = urllib.request.urlopen(url)
             except urllib.error.URLError:
                 errmsg = QtWidgets.QErrorMessage(self)
+                errmsg.setWindowTitle("Error")
+                errmsg.setWindowIcon(QtGui.QIcon('error-flat.png'))
                 errmsg.showMessage('Invalid Ip address')
                 break
             img_np = np.array(bytearray(img_resp.read()), dtype=np.uint8)
@@ -237,7 +211,7 @@ class My_Form(QtWidgets.QMainWindow):
         cv2.destroyAllWindows()
 
     def motion_detector_cam(self):
-        cap = cv2.VideoCapture(cv2.CAP_DSHOW)  # nagranie z kamery
+        cap = cv2.VideoCapture(cv2.CAP_DSHOW)
         mog2 = cv2.createBackgroundSubtractorMOG2()
 
         print("Press ESC to quit")
@@ -245,31 +219,71 @@ class My_Form(QtWidgets.QMainWindow):
             ret, frame = cap.read()
             frame1 = frame
             fgmask = mog2.apply(frame1)
+            cv2.putText(fgmask, "Press [ESC] to exit", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
             cv2.imshow('Motion detection', fgmask)
             k = cv2.waitKey(30) & 0xff
             if k == 27:
                 break
-
         cap.release()
         cv2.destroyAllWindows()
 
     def display_DB(self):
-        self.ui.textBrowser.clear()
         conn = sqlite3.connect("FaceBaseGit.db")
-        cmd = "SELECT * FROM People"
-        cursor = conn.execute(cmd)
-        result = cursor.fetchall()
-        text = ''
-        for row in result:
-            text += str(row) + '\n'
-        # cursor.close()
-        # conn.close()
-        self.ui.textBrowser.setText(text)
+        query = "SELECT * FROM People"
+        result = conn.execute(query)
 
+        self.ui.tableWidget.setRowCount(0)
+        for row_number, row_data in enumerate(result):
+            self.ui.tableWidget.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                self.ui.tableWidget.setItem(row_number, column_number,
+                                            QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+
+    def insert_or_update2(self, _id, name, age, gender):  # funkcja do modyfikowania bazy danych
+        conn = sqlite3.connect("FaceBaseGit.db")
+        cmd = "SELECT * FROM People WHERE ID =" + str(_id)
+        cursor = conn.execute(cmd)
+        does_record_exists = 0
+
+        for _ in cursor:
+            does_record_exists = 1
+        if does_record_exists == 1:
+            cmd = "UPDATE People SET Age=" + str(age) + "," + "Gender=" + str(gender) + "," + "Name=" + str(
+                name) + " WHERE ID =" + str(_id)
+        else:
+            cmd = "INSERT INTO People(ID,Name,Age,Gender) Values(" + str(_id) + "," + str(name) + "," + str(
+                age) + "," + str(gender) + ")"
+        conn.execute(cmd)
+        conn.commit()
+        conn.close()
+
+    def insert_or_update2(self, _id, name, age, gender):  # funkcja do modyfikowania bazy danych
+        conn = sqlite3.connect("FaceBaseGit.db")
+        cmd = "SELECT * FROM People WHERE ID =" + str(_id)
+        cursor = conn.execute(cmd)
+        does_record_exists = 0
+        for _ in cursor:
+            does_record_exists = 1
+        if does_record_exists == 1:
+            cmd = "UPDATE People SET Age=" + str(age) + "," + "Gender=" + str(gender) + "," + "Name=" + str(
+                name) + " WHERE ID =" + str(_id)
+        else:
+            cmd = "INSERT INTO People(ID,Name,Age,Gender) Values(" + str(_id) + "," + str(name) + "," + str(
+                age) + "," + str(gender) + ")"
+        conn.execute(cmd)
+        conn.commit()
+        conn.close()
+
+    def db_edit(self):  # funkcja do modyfikowania bazy danych
+        self.qbox = QtWidgets.QLineEdit()
+        id, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your id')
+        name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter your name')
+        age, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your age')
+        gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender', ('M', 'F'), 0, False)
+        self.insert_or_update2(id, "\"" + name + "\"", age, "\"" + gender + "\"")
 
 def main():
-    # app = QtGui.QGuiApplication(sys.argv)
-
     app = QtWidgets.QApplication(sys.argv)
     my_app = My_Form()
     my_app.show()
