@@ -43,16 +43,16 @@ class My_Form(QtWidgets.QMainWindow):
                         while True:
                             ret, img = cam.read()
                             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                            faces = face_detect.detectMultiScale(gray, 1.3, 2)
+                            faces = face_detect.detectMultiScale(gray, 1.05, 5)
                             for (x, y, w, h) in faces:
                                 sample_num = sample_num + 1
                                 cv2.imwrite("dataSet/User." + str(id) + "." + str(sample_num) + ".jpg",
                                             gray[y:y + h, x:x + w])
                                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                                cv2.waitKey(100)
+                                cv2.waitKey(50)
                             cv2.imshow("Face", img)
                             cv2.waitKey(1)
-                            if sample_num > 20:
+                            if sample_num > 50:
                                 break
                         cam.release()
                         cv2.destroyAllWindows()
@@ -116,7 +116,7 @@ class My_Form(QtWidgets.QMainWindow):
         while True:
             ret, img = cam.read()
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            faces = face_detect.detectMultiScale(gray, 1.5, 5)
+            faces = face_detect.detectMultiScale(gray, 1.05, 5)
             blabla = np.array(faces)
             i = blabla.size
             i = i / 4
@@ -180,7 +180,7 @@ class My_Form(QtWidgets.QMainWindow):
             img_np = np.array(bytearray(img_resp.read()), dtype=np.uint8)
             img = cv2.imdecode(img_np, -1)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            faces = face_detect.detectMultiScale(gray, 1.3, 2)
+            faces = face_detect.detectMultiScale(gray, 1.05, 5)
             blabla = np.array(faces)
             i = blabla.size
             i = i / 4
