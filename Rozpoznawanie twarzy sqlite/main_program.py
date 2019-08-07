@@ -43,7 +43,7 @@ class My_Form(QtWidgets.QMainWindow):
                     sample_num = 0
                     self.msg.setText("Teraz zostanie stworzona baza danych twarzy")
                     self.msg.setInformativeText("Zmieniaj pozycję twarzy w obszarze kamery aż aplikacja nie zakończy "
-                                           "tworzenia bazy twarzy")
+                                           "działania")
                     self.msg.show()
                     self.msg.exec_()
                     while True:
@@ -61,7 +61,7 @@ class My_Form(QtWidgets.QMainWindow):
                             cv2.waitKey(100)
                         cv2.imshow("Face", img)
                         cv2.waitKey(1)
-                        if sample_num > 7:
+                        if sample_num > 70:
                             break
                     cam.release()
                     cv2.destroyAllWindows()
