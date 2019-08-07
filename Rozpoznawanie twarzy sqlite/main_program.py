@@ -28,34 +28,43 @@ class My_Form(QtWidgets.QMainWindow):
         face_detect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         cam = cv2.VideoCapture(0)
         self.qbox = QtWidgets.QLineEdit()
-        id, ok = QtWidgets.QInputDialog.getInt(self, ' ', 'Enter your id')
+        self.msg = QtWidgets.QMessageBox()
+        self.msg.setIcon(QtWidgets.QMessageBox.Information)
+        self.msg.setWindowIcon(QtGui.QIcon('web-camera.png'))
+        self.msg.setWindowTitle("Info")
+        name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter your name')
         if ok:
-            name, ok = QtWidgets.QInputDialog.getText(self, '', 'Enter your name')
+            age, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your age')
             if ok:
-                age, ok = QtWidgets.QInputDialog.getInt(self, '', 'Enter your age')
-                if ok:
-                    gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender',
+                gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender',
                                                                 ('Male', 'Female'), 0, False)
-                    if ok:
-                        self.insert_or_update(id, "\"" + name + "\"", age, "\"" + gender + "\"")
-                        sample_num = 0
-
-                        while True:
-                            ret, img = cam.read()
-                            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                            faces = face_detect.detectMultiScale(gray, 1.05, 5)
-                            for (x, y, w, h) in faces:
-                                sample_num = sample_num + 1
-                                cv2.imwrite("dataSet/User." + str(id) + "." + str(sample_num) + ".jpg",
-                                            gray[y:y + h, x:x + w])
-                                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                                cv2.waitKey(50)
-                            cv2.imshow("Face", img)
-                            cv2.waitKey(1)
-                            if sample_num > 50:
-                                break
-                        cam.release()
-                        cv2.destroyAllWindows()
+                if ok:
+                    self.insert_person("\"" + name + "\"", age, "\"" + gender + "\"")
+                    sample_num = 0
+                    self.msg.setText("Teraz zostanie stworzona baza danych twarzy")
+                    self.msg.setInformativeText("Zmieniaj pozycję twarzy w obszarze kamery aż aplikacja nie zakończy "
+                                           "tworzenia bazy twarzy")
+                    self.msg.show()
+                    self.msg.exec_()
+                    while True:
+                        ret, img = cam.read()
+                        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                        faces = face_detect.detectMultiScale(gray, 1.2, 2)
+                        # side_faces = profile_face.detectMultiScale(gray, 1.05, 5)
+                        # flipped = cv2.flip(gray, 1)
+                        # side_faces2 = profile_face.detectMultiScale(flipped, 1.05, 5)
+                        for (x, y, w, h) in faces:
+                            sample_num = sample_num + 1
+                            cv2.imwrite("dataSet/User." + str(id) + "." + str(sample_num) + ".jpg",
+                                        gray[y:y + h, x:x + w])
+                            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                            cv2.waitKey(100)
+                        cv2.imshow("Face", img)
+                        cv2.waitKey(1)
+                        if sample_num > 7:
+                            break
+                    cam.release()
+                    cv2.destroyAllWindows()
 
     recognizer = cv2.face.LBPHFaceRecognizer_create()
     path = 'dataSet'
@@ -233,7 +242,7 @@ class My_Form(QtWidgets.QMainWindow):
                                             QtWidgets.QTableWidgetItem(str(data)))
         conn.close()
 
-    def insert_or_update(self, _id, name, age, gender):  # funkcja do modyfikowania bazy danych
+    def update_db(self, _id, name, age, gender):  # funkcja do modyfikowania bazy danych
         conn = sqlite3.connect("FaceBaseGit.db")
         cmd = "SELECT * FROM People WHERE ID =" + str(_id)
         cursor = conn.execute(cmd)
@@ -245,8 +254,28 @@ class My_Form(QtWidgets.QMainWindow):
             cmd = "UPDATE People SET Age=" + str(age) + "," + "Gender=" + str(gender) + "," + "Name=" + str(
                 name) + " WHERE ID =" + str(_id)
         else:
-            cmd = "INSERT INTO People(ID,Name,Age,Gender) Values(" + str(_id) + "," + str(name) + "," + str(
-                age) + "," + str(gender) + ")"
+            self.qbox = QtWidgets.QLineEdit()
+            self.msg = QtWidgets.QMessageBox()
+            self.msg.setIcon(QtWidgets.QMessageBox.Information)
+            self.msg.setWindowIcon(QtGui.QIcon('web-camera.png'))
+            self.msg.setWindowTitle("Info")
+            self.msg.setText("Teraz zostanie stworzona baza danych twarzy")
+            self.msg.setInformativeText("Zmieniaj pozycję twarzy w obszarze kamery aż aplikacja nie zakończy "
+                                        "tworzenia bazy twarzy")
+            self.msg.show()
+            self.msg.exec_()
+
+        conn.execute(cmd)
+        conn.commit()
+        conn.close()
+
+    def insert_person(self, name, age, gender):
+        conn = sqlite3.connect("FaceBaseGit.db")
+        cursor = conn.execute("SELECT MAX(id) FROM People")
+        max_id = cursor.fetchone()[0]
+        id = max_id + 1
+        cmd = "INSERT INTO People(ID,Name,Age,Gender) Values(" + str(id) + "," + str(name) + "," + str(
+            age) + "," + str(gender) + ")"
         conn.execute(cmd)
         conn.commit()
         conn.close()
@@ -262,7 +291,7 @@ class My_Form(QtWidgets.QMainWindow):
                     gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender',
                                                                 ('Male', 'Female'), 0, False)
                     if ok:
-                        self.insert_or_update(id, "\"" + name + "\"", age, "\"" + gender + "\"")
+                        self.update_db(id, "\"" + name + "\"", age, "\"" + gender + "\"")
 
 
 def main():
