@@ -161,7 +161,7 @@ def face_recognition():
 
 
 def ip_camera():
-    url = 'http://10.5.5.26:8080/shot.jpg'  # trzeba bedzie zmienic
+    url = 'http://10.112.5.92:8080/shot.jpg'  # trzeba bedzie zmienic
     while True:
         imgResp = urllib.request.urlopen(url)
         imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
