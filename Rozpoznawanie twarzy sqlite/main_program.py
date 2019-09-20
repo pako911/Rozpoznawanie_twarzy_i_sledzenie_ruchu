@@ -50,18 +50,19 @@ class My_Form(QtWidgets.QMainWindow):
                         ret, img = cam.read()
                         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                         faces = face_detect.detectMultiScale(gray, 1.2, 2)
-                        # side_faces = profile_face.detectMultiScale(gray, 1.05, 5)
-                        # flipped = cv2.flip(gray, 1)
-                        # side_faces2 = profile_face.detectMultiScale(flipped, 1.05, 5)
                         for (x, y, w, h) in faces:
                             sample_num = sample_num + 1
+                            conn = sqlite3.connect("FaceBaseGit.db")
+                            cursor = conn.execute("SELECT MAX(id) FROM People")
+                            max_id = cursor.fetchone()[0]
+                            id = max_id
                             cv2.imwrite("dataSet/User." + str(id) + "." + str(sample_num) + ".jpg",
                                         gray[y:y + h, x:x + w])
                             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                             cv2.waitKey(100)
                         cv2.imshow("Face", img)
                         cv2.waitKey(1)
-                        if sample_num > 70:
+                        if sample_num > 5:
                             break
                     cam.release()
                     cv2.destroyAllWindows()
@@ -136,7 +137,7 @@ class My_Form(QtWidgets.QMainWindow):
                 profile = self.get_profile(_id)
 
                 if profile is not None:
-                    if conf > 100:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
+                    if conf > 90:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
                         cv2.putText(img, "unknown", (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
                     else:
                         _id, conf = rec.predict(gray[y:y + h, x:x + w])
@@ -273,7 +274,10 @@ class My_Form(QtWidgets.QMainWindow):
         conn = sqlite3.connect("FaceBaseGit.db")
         cursor = conn.execute("SELECT MAX(id) FROM People")
         max_id = cursor.fetchone()[0]
-        id = max_id + 1
+        if max_id != None:
+            id = max_id + 1
+        else:
+            id = 1
         cmd = "INSERT INTO People(ID,Name,Age,Gender) Values(" + str(id) + "," + str(name) + "," + str(
             age) + "," + str(gender) + ")"
         conn.execute(cmd)
