@@ -21,6 +21,7 @@ class My_Form(QtWidgets.QMainWindow):
         self.ui.ipCameraButton.clicked.connect(self.ip_camera_face_recognition)
         self.ui.pushButton_6.clicked.connect(self.motion_detector_cam)
         self.ui.pushButton_3.clicked.connect(self.db_edit)
+        self.ui.pushButton_3_2.clicked.connect(self.delete_user)
         self.ui.pushButton_4.clicked.connect(self.create_data_set)
         self.ui.pushButton_5.clicked.connect(self.create_training_file)
 
@@ -62,7 +63,7 @@ class My_Form(QtWidgets.QMainWindow):
                             cv2.waitKey(100)
                         cv2.imshow("Face", img)
                         cv2.waitKey(1)
-                        if sample_num > 5:
+                        if sample_num > 5:  # ilość zdjęć do datasetu
                             break
                     cam.release()
                     cv2.destroyAllWindows()
@@ -254,17 +255,6 @@ class My_Form(QtWidgets.QMainWindow):
         if does_record_exists == 1:
             cmd = "UPDATE People SET Age=" + str(age) + "," + "Gender=" + str(gender) + "," + "Name=" + str(
                 name) + " WHERE ID =" + str(_id)
-        else:
-            self.qbox = QtWidgets.QLineEdit()
-            self.msg = QtWidgets.QMessageBox()
-            self.msg.setIcon(QtWidgets.QMessageBox.Information)
-            self.msg.setWindowIcon(QtGui.QIcon('web-camera.png'))
-            self.msg.setWindowTitle("Info")
-            self.msg.setText("Teraz zostanie stworzona baza danych twarzy")
-            self.msg.setInformativeText("Zmieniaj pozycję twarzy w obszarze kamery aż aplikacja nie zakończy "
-                                        "tworzenia bazy twarzy")
-            self.msg.show()
-            self.msg.exec_()
 
         conn.execute(cmd)
         conn.commit()
@@ -297,6 +287,26 @@ class My_Form(QtWidgets.QMainWindow):
                     if ok:
                         self.update_db(id, "\"" + name + "\"", age, "\"" + gender + "\"")
 
+    def delete_user(self):
+        self.qbox = QtWidgets.QLineEdit()
+        _id, ok = QtWidgets.QInputDialog.getInt(self, ' ', 'Enter your id')
+        conn = sqlite3.connect("FaceBaseGit.db")
+        cmd = "SELECT * FROM People WHERE ID =" + str(_id)
+        cursor = conn.execute(cmd)
+        does_record_exists = 0
+
+        for _ in cursor:
+            does_record_exists = 1
+        if does_record_exists == 1:
+            cmd = "DELETE FROM People where ID = " + str(_id)
+            my_dir = "C:/Users/pako9/Documents/GitHub/Rozpoznawanie_twarzy_i_sledzenie_ruchu/Rozpoznawanie twarzy sqlite/dataSet/"
+            for fname in os.listdir(my_dir):
+                if fname.startswith("User." + str(_id)):
+                    os.remove(os.path.join(my_dir, fname))
+
+        conn.execute(cmd)
+        conn.commit()
+        conn.close()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

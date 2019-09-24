@@ -4,6 +4,7 @@ import os
 from PIL import Image
 import sqlite3
 import urllib.request
+import os, glob
 
 
 def face_detection():
@@ -419,8 +420,27 @@ def switch_if():
         menu()
         option = int(input("Your Option : "))
 
+def delete_user(_id):
+    conn = sqlite3.connect("FaceBaseGit.db")
+    cmd = "SELECT * FROM People WHERE ID =" + str(_id)
+    cursor = conn.execute(cmd)
+    does_record_exists = 0
+
+    for _ in cursor:
+        does_record_exists = 1
+    if does_record_exists == 1:
+        cmd = "DELETE FROM People where ID = " + str(_id)
+        my_dir = "C:/Users/pako9/Documents/GitHub/Rozpoznawanie_twarzy_i_sledzenie_ruchu/Rozpoznawanie twarzy sqlite/dataSet/"
+        for fname in os.listdir(my_dir):
+            if fname.startswith("User." + str(_id)):
+                os.remove(os.path.join(my_dir, fname))
+
+    conn.execute(cmd)
+    conn.commit()
+    conn.close()
 
 if __name__ == "__main__":
+    # delete_user(2)
     switch_if()
 
 
