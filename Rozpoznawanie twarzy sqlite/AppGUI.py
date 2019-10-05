@@ -67,6 +67,10 @@ class Ui_MainWindow(object):
         self.pushButton_3_2.setObjectName("pushButton3_2")
         self.verticalLayout_2.addWidget(self.pushButton_3_2)
 
+        self.pushButton_3_3 = QtWidgets.QPushButton(self.tab_2)
+        self.pushButton_3_3.setObjectName("pushButton3_3")
+        self.verticalLayout_2.addWidget(self.pushButton_3_3)
+
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
@@ -110,6 +114,7 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "View database"))
         self.pushButton_3.setText(_translate("MainWindow", "Edit database"))
         self.pushButton_3_2.setText(_translate("MainWindow", "Delete person"))
+        self.pushButton_3_3.setText(_translate("MainWindow", "Edit privileges"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Database"))
         self.pushButton_4.setText(_translate("MainWindow", "Create dataset"))
         self.pushButton_5.setText(_translate("MainWindow", "Create training file"))

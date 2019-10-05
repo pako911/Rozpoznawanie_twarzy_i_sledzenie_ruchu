@@ -4,24 +4,27 @@ import os
 import sqlite3
 import sys
 import urllib.request
+import recognizer
+from dbhandler import DBHandler
 
 from PIL import Image
 from PyQt5 import QtWidgets, QtCore, QtGui
 from AppGUI import Ui_MainWindow
 
 
-class My_Form(QtWidgets.QMainWindow):
+class MyForm(QtWidgets.QMainWindow):
     def __init__(self):
-        super(My_Form, self).__init__()
+        super(MyForm, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowIcon(QtGui.QIcon('web-camera.png'))
         self.ui.pushButton.clicked.connect(self.face_recognition)
-        self.ui.pushButton_2.clicked.connect(self.display_DB)
+        self.ui.pushButton_2.clicked.connect(self.db_display)
         self.ui.ipCameraButton.clicked.connect(self.ip_camera_face_recognition)
         self.ui.pushButton_6.clicked.connect(self.motion_detector_cam)
         self.ui.pushButton_3.clicked.connect(self.db_edit)
         self.ui.pushButton_3_2.clicked.connect(self.delete_user)
+        # self.ui.pushButton_3_3.clicked.connect(self.) po kropce dodaj nazwę funkcji bez nawiasów
         self.ui.pushButton_4.clicked.connect(self.create_data_set)
         self.ui.pushButton_5.clicked.connect(self.create_training_file)
 
@@ -63,7 +66,7 @@ class My_Form(QtWidgets.QMainWindow):
                             cv2.waitKey(100)
                         cv2.imshow("Face", img)
                         cv2.waitKey(1)
-                        if sample_num > 5:  # ilość zdjęć do datasetu
+                        if sample_num > 20:  # ilość zdjęć do datasetu
                             break
                     cam.release()
                     cv2.destroyAllWindows()
@@ -80,7 +83,7 @@ class My_Form(QtWidgets.QMainWindow):
             face_np = np.array(face_img, 'uint8')
             _id = int(os.path.split(imagePath)[-1].split('.')[1])
             faces.append(face_np)
-            print(_id)
+            # print(_id)
             ids.append(_id)
             cv2.imshow("training", face_np)
             cv2.waitKey(10)
@@ -138,7 +141,7 @@ class My_Form(QtWidgets.QMainWindow):
                 profile = self.get_profile(_id)
 
                 if profile is not None:
-                    if conf > 90:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
+                    if conf > 60:  # prawdopodobieństwo poprawnego wykrycia twarzy (im niższa liczba tym jest ono większe)
                         cv2.putText(img, "unknown", (x, y + h + 30), font_face, 1, (255, 0, 0), 2)
                     else:
                         _id, conf = rec.predict(gray[y:y + h, x:x + w])
@@ -231,7 +234,7 @@ class My_Form(QtWidgets.QMainWindow):
         cap.release()
         cv2.destroyAllWindows()
 
-    def display_DB(self):
+    def db_display(self):
         conn = sqlite3.connect("FaceBaseGit.db")
         query = "SELECT * FROM People"
         result = conn.execute(query)
@@ -244,7 +247,7 @@ class My_Form(QtWidgets.QMainWindow):
                                             QtWidgets.QTableWidgetItem(str(data)))
         conn.close()
 
-    def update_db(self, _id, name, age, gender):  # funkcja do modyfikowania bazy danych
+    def db_update(self, _id, name, age, gender):  # funkcja do modyfikowania bazy danych
         conn = sqlite3.connect("FaceBaseGit.db")
         cmd = "SELECT * FROM People WHERE ID =" + str(_id)
         cursor = conn.execute(cmd)
@@ -285,7 +288,7 @@ class My_Form(QtWidgets.QMainWindow):
                     gender, ok = QtWidgets.QInputDialog.getItem(self, 'Select your gender', 'gender',
                                                                 ('Male', 'Female'), 0, False)
                     if ok:
-                        self.update_db(id, "\"" + name + "\"", age, "\"" + gender + "\"")
+                        self.db_update(id, "\"" + name + "\"", age, "\"" + gender + "\"")
 
     def delete_user(self):
         self.qbox = QtWidgets.QLineEdit()
@@ -299,7 +302,8 @@ class My_Form(QtWidgets.QMainWindow):
             does_record_exists = 1
         if does_record_exists == 1:
             cmd = "DELETE FROM People where ID = " + str(_id)
-            my_dir = "C:/Users/pako9/Documents/GitHub/Rozpoznawanie_twarzy_i_sledzenie_ruchu/Rozpoznawanie twarzy sqlite/dataSet/"
+            my_dir = "C:/Users/pako9/Documents/GitHub/Rozpoznawanie_twarzy_i_sledzenie_ruchu/" \
+                     "Rozpoznawanie twarzy sqlite/dataSet/"
             for fname in os.listdir(my_dir):
                 if fname.startswith("User." + str(_id)):
                     os.remove(os.path.join(my_dir, fname))
@@ -308,9 +312,10 @@ class My_Form(QtWidgets.QMainWindow):
         conn.commit()
         conn.close()
 
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    my_app = My_Form()
+    my_app = MyForm()
     my_app.show()
     sys.exit(app.exec_())
 
